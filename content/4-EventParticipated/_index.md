@@ -1,6 +1,6 @@
----
+﻿---
 title: "Events Participated"
-date: "`r Sys.Date()`"
+date: "2024-01-15"
 weight: 4
 chapter: false
 pre: " <b> 4. </b> "
@@ -42,3 +42,5 @@ During my internship, I participated in two events. Each one was a memorable exp
 &emsp;**Location:** 26th Floor, Bitexco Tower, 02 Hai Trieu Street, Saigon Ward, Ho Chi Minh City  
 
 &emsp;**Role:** Attendee  
+
+

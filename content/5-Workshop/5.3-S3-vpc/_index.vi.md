@@ -1,6 +1,6 @@
----
+﻿---
 title : "Truy cập S3 từ VPC"
-date :  "`r Sys.Date()`" 
+date: "2024-01-15" 
 weight : 3
 chapter : false
 pre : " <b> 5.3. </b> "
@@ -16,3 +16,4 @@ Trong phần này, bạn sẽ tạo một Gateway endpoint để truy cập Amaz
 
 - [Tạo gateway endpoint](3.1-create-gwe/)
 - [Test gateway endpoint](3.2-test-gwe/)
+

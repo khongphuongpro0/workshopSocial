@@ -1,59 +1,26 @@
----
+﻿---
 title: "Worklog Tuần 5"
-date: "`r Sys.Date()`"
+date: "2024-01-15"
 weight: 1
 chapter: false
 pre: " <b> 1.5. </b> "
 ---
-{{% notice warning %}}
-⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
-{{% /notice %}}
-
 
 ### Mục tiêu tuần 5:
 
-* Kết nối, làm quen với các thành viên trong First Cloud Journey.
-* Hiểu dịch vụ AWS cơ bản, cách dùng console & CLI.
+- Thiết kế kiến trúc code
+- Thực hiện tạo các Layer và các lớp cơ bản để triển khai dự án
+- Tìm hiểu thêm về các dịch vụ AWS, hiểu thêm về RDS, Auto Scalling Group, Amazon Load Balance.
 
 ### Các công việc cần triển khai trong tuần này:
-| Thứ | Công việc                                                                                                                                                                                   | Ngày bắt đầu | Ngày hoàn thành | Nguồn tài liệu                            |
-| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ | --------------- | ----------------------------------------- |
-| 2   | - Làm quen với các thành viên FCJ <br> - Đọc và lưu ý các nội quy, quy định tại đơn vị thực tập                                                                                             | 11/08/2025   | 11/08/2025      |
-| 3   | - Tìm hiểu AWS và các loại dịch vụ <br>&emsp; + Compute <br>&emsp; + Storage <br>&emsp; + Networking <br>&emsp; + Database <br>&emsp; + ... <br>                                            | 12/08/2025   | 12/08/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 4   | - Tạo AWS Free Tier account <br> - Tìm hiểu AWS Console & AWS CLI <br> - **Thực hành:** <br>&emsp; + Tạo AWS account <br>&emsp; + Cài AWS CLI & cấu hình <br> &emsp; + Cách sử dụng AWS CLI | 13/08/2025   | 13/08/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 5   | - Tìm hiểu EC2 cơ bản: <br>&emsp; + Instance types <br>&emsp; + AMI <br>&emsp; + EBS <br>&emsp; + ... <br> - Các cách remote SSH vào EC2 <br> - Tìm hiểu Elastic IP   <br>                  | 14/08/2025   | 15/08/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 6   | - **Thực hành:** <br>&emsp; + Tạo EC2 instance <br>&emsp; + Kết nối SSH <br>&emsp; + Gắn EBS volume                                                                                         | 15/08/2025   | 15/08/2025      | <https://cloudjourney.awsstudygroup.com/> |
 
+| Thứ   | Công việc                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | Ngày bắt đầu | Ngày hoàn thành | Nguồn tài liệu                                      |
+| ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ | --------------- | --------------------------------------------------- |
+| 2     | - Tiếp tục tìm hiểu thêm về RDS, EC2, Security Group, Auto Scalling Group, Amazon Load Balance <br> **Thực hành:** <br>&emsp; + Thực hành tạo RDS và liên kết với EC2 để tạo thử database cơ bản                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | 29/09/2025   | 29/09/2025      | <https://000005.awsstudygroup.com/vi/4-create-rds/> |
+| 3 - 6 | - Triển khai kiến trúc Onion<br> - Thiết kế các Layer<br> - Thiết kể các lớp như service, Repository, IRepository <br> **Thực hành:**<br>&emsp; + Ứng dụng AI để làm nhanh cho việc thiết kế lớp IBaseRepository, BaseRepository để có code chung về lấy dữ liệu từ cơ sở dữ liệu<br>&emsp; + Làm code đặc thù cho mỗi Repository với tính năng riêng cho tất cả các lớp Repository còn lại tương ứng với các bảng như Account,Adress,BlockedUser, Comment, CommentLike,CommentMember,ConversationNickName, Conversation,District, Follow, Friend,User,UserToken,MessageAttachment, MessageReaction, MessageRead.<br>&emsp; + Thiết kế các DTO để trả về dữ liệu cho các Repository | 30/09/2025   | 05/10/2025      | DeepSeek, Claude Code                               |
 
 ### Kết quả đạt được tuần 5:
 
-* Hiểu AWS là gì và nắm được các nhóm dịch vụ cơ bản: 
-  * Compute
-  * Storage
-  * Networking 
-  * Database
-  * ...
-
-* Đã tạo và cấu hình AWS Free Tier account thành công.
-
-* Làm quen với AWS Management Console và biết cách tìm, truy cập, sử dụng dịch vụ từ giao diện web.
-
-* Cài đặt và cấu hình AWS CLI trên máy tính bao gồm:
-  * Access Key
-  * Secret Key
-  * Region mặc định
-  * ...
-
-* Sử dụng AWS CLI để thực hiện các thao tác cơ bản như:
-
-  * Kiểm tra thông tin tài khoản & cấu hình
-  * Lấy danh sách region
-  * Xem dịch vụ EC2
-  * Tạo và quản lý key pair
-  * Kiểm tra thông tin dịch vụ đang chạy
-  * ...
-
-* Có khả năng kết nối giữa giao diện web và CLI để quản lý tài nguyên AWS song song.
-* ...
-
-
+- Hiểu thêm về EC2, RDS, ASG và ALB
+- Thiết kế kiến trúc Onion cho dự án
+- Thiết kế thành công 1 số lớp đặc thù cho việc truy cập cơ sở dữ liệu IRepository, Repository

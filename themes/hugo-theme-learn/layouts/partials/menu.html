@@ -1,4 +1,4 @@
-<nav
+﻿<nav
   id="sidebar"
   class="{{if $.Site.Params.showVisitedLinks }}showVisitedLinks{{end}}"
 >
@@ -35,11 +35,11 @@
         {{end}}
       </ul>
     </section>
-    {{end}} {{ if or .Site.IsMultiLingual $showvisitedlinks }}
+    {{end}} {{ if or hugo.IsMultilingual $showvisitedlinks }}
     <section id="prefooter">
       <hr />
       <ul>
-        {{ if and .Site.IsMultiLingual (not
+        {{ if and hugo.IsMultilingual (not
         .Site.Params.DisableLanguageSwitchingButton)}}
         <li>
           <a class="padding">
@@ -154,3 +154,4 @@ $currentNode.File }}{{ $currentFileUniqueID = .UniqueID }}{{ end }} {{with
   </a>
 </li>
 {{ end }} {{end}} {{ end }} {{ end }}
+

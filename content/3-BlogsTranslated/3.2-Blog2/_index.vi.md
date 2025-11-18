@@ -1,6 +1,6 @@
----
+﻿---
 title: "Blog 2"
-date: "`r Sys.Date()`"
+date: "2024-01-15"
 weight: 1
 chapter: false
 pre: " <b> 3.2. </b> "
@@ -125,3 +125,5 @@ Outputs:
     Value: !GetAtt Catalog.Arn
     Export:
       Name: !Sub ${AWS::StackName}-CatalogArn
+
+

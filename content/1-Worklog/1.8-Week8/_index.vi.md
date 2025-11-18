@@ -1,59 +1,34 @@
----
+﻿---
 title: "Worklog Tuần 8"
-date: "`r Sys.Date()`"
+date: "2024-01-15"
 weight: 1
 chapter: false
 pre: " <b> 1.8. </b> "
 ---
-{{% notice warning %}}
-⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
-{{% /notice %}}
-
 
 ### Mục tiêu tuần 8:
 
-* Kết nối, làm quen với các thành viên trong First Cloud Journey.
-* Hiểu dịch vụ AWS cơ bản, cách dùng console & CLI.
+- Tiếp tục cài đặt, xây dựng bổ sung thêm về các tính năng còn thiếu như JWT
+- Hoàn thành chức năng gửi tin nhắn cho cuộc hội thoại cả nhóm lẫn cá nhân.
+- Hoàn thành các chức năng User như đăng nhập, đăng ký, gửi mail xác nhận, quên mật khẩu.
 
 ### Các công việc cần triển khai trong tuần này:
-| Thứ | Công việc                                                                                                                                                                                   | Ngày bắt đầu | Ngày hoàn thành | Nguồn tài liệu                            |
-| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ | --------------- | ----------------------------------------- |
-| 2   | - Làm quen với các thành viên FCJ <br> - Đọc và lưu ý các nội quy, quy định tại đơn vị thực tập                                                                                             | 11/08/2025   | 11/08/2025      |
-| 3   | - Tìm hiểu AWS và các loại dịch vụ <br>&emsp; + Compute <br>&emsp; + Storage <br>&emsp; + Networking <br>&emsp; + Database <br>&emsp; + ... <br>                                            | 12/08/2025   | 12/08/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 4   | - Tạo AWS Free Tier account <br> - Tìm hiểu AWS Console & AWS CLI <br> - **Thực hành:** <br>&emsp; + Tạo AWS account <br>&emsp; + Cài AWS CLI & cấu hình <br> &emsp; + Cách sử dụng AWS CLI | 13/08/2025   | 13/08/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 5   | - Tìm hiểu EC2 cơ bản: <br>&emsp; + Instance types <br>&emsp; + AMI <br>&emsp; + EBS <br>&emsp; + ... <br> - Các cách remote SSH vào EC2 <br> - Tìm hiểu Elastic IP   <br>                  | 14/08/2025   | 15/08/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 6   | - **Thực hành:** <br>&emsp; + Tạo EC2 instance <br>&emsp; + Kết nối SSH <br>&emsp; + Gắn EBS volume                                                                                         | 15/08/2025   | 15/08/2025      | <https://cloudjourney.awsstudygroup.com/> |
 
+| Thứ   | Công việc                                                                                                                                                                         | Ngày bắt đầu | Ngày hoàn thành | Nguồn tài liệu |
+| ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ | --------------- | -------------- |
+| 2 - 4 | **Thực hành:** <br>&emsp; + Hoàn thành chức năng nhắn tin, kiểm thử Controller về việc nhắn tin<br>&emsp;+ Tiếp tục làm Service về kết bạn, chặn, theo dõi                        | 20/08/2025   | 22/10/2025      |
+| 5     | **Thực hành:** <br>&emsp;+ Tích hợp JWT cũng như BCrypt để mã hóa mật khẩu <br>&emsp;+ Tiến hành làm đăng nhập, đăng kí <br>&emsp; + Thiết kế RDS để chuẩn bị database trên cloud | 23/10/2025   | 24/10/2025      |
+| 6     | **Thực hành:** <br>&emsp; +Tiếp tục hoàn thành xong Service chức năng đăng nhập, đăng kí, bổ sung thêm chức năng về quên mật khẩu, đổi mật khẩu, tích hợp gửi mail bằng SendGrid  | 24/10/2025   | 26/10/2025      |
 
 ### Kết quả đạt được tuần 8:
 
-* Hiểu AWS là gì và nắm được các nhóm dịch vụ cơ bản: 
-  * Compute
-  * Storage
-  * Networking 
-  * Database
-  * ...
+- Hoàn thành xong lớp Service và Controller của chức năng:
 
-* Đã tạo và cấu hình AWS Free Tier account thành công.
-
-* Làm quen với AWS Management Console và biết cách tìm, truy cập, sử dụng dịch vụ từ giao diện web.
-
-* Cài đặt và cấu hình AWS CLI trên máy tính bao gồm:
-  * Access Key
-  * Secret Key
-  * Region mặc định
-  * ...
-
-* Sử dụng AWS CLI để thực hiện các thao tác cơ bản như:
-
-  * Kiểm tra thông tin tài khoản & cấu hình
-  * Lấy danh sách region
-  * Xem dịch vụ EC2
-  * Tạo và quản lý key pair
-  * Kiểm tra thông tin dịch vụ đang chạy
-  * ...
-
-* Có khả năng kết nối giữa giao diện web và CLI để quản lý tài nguyên AWS song song.
-* ...
-
-
+* Gửi tin nhắn, Sticker, file, ảnh, video
+* Sửa tin nhắn
+* Xóa tin nhắn
+* Đăng nhập
+* Đăng kí
+* Gửi mail để lấy lại mật khẩu
+* Gửi mail để xác nhận tài khoản
+  Kiểm thử thành công bằng PostMan các chức năng tương ứng

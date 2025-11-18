@@ -1,6 +1,6 @@
----
+﻿---
 title: "Worklog"
-date: "`r Sys.Date()`"
+date: "2024-01-15"
 weight: 1
 chapter: false
 pre: " <b> 1. </b> "
@@ -37,3 +37,5 @@ Typically, and as a standard, a worklog is carried out over about 3 months (thro
 **Week 11:** [Doing task M...](1.11-week11/)
 
 **Week 12:** [Doing task N...](1.12-week12/)
+
+

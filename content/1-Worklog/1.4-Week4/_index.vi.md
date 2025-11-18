@@ -1,59 +1,46 @@
----
+﻿---
 title: "Worklog Tuần 4"
-date: "`r Sys.Date()`"
+date: "2024-01-15"
 weight: 1
 chapter: false
 pre: " <b> 1.4. </b> "
 ---
-{{% notice warning %}}
-⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
-{{% /notice %}}
-
 
 ### Mục tiêu tuần 4:
 
-* Kết nối, làm quen với các thành viên trong First Cloud Journey.
-* Hiểu dịch vụ AWS cơ bản, cách dùng console & CLI.
+- Tiếp tục tìm hiệu, chọn công nghệ để thực hiện dự án
+- Tìm hiểu tiếp tục về các dịch vụ của AWS
+- Thiết kế hoàn thành cơ sở dữ liệu
 
 ### Các công việc cần triển khai trong tuần này:
-| Thứ | Công việc                                                                                                                                                                                   | Ngày bắt đầu | Ngày hoàn thành | Nguồn tài liệu                            |
-| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ | --------------- | ----------------------------------------- |
-| 2   | - Làm quen với các thành viên FCJ <br> - Đọc và lưu ý các nội quy, quy định tại đơn vị thực tập                                                                                             | 11/08/2025   | 11/08/2025      |
-| 3   | - Tìm hiểu AWS và các loại dịch vụ <br>&emsp; + Compute <br>&emsp; + Storage <br>&emsp; + Networking <br>&emsp; + Database <br>&emsp; + ... <br>                                            | 12/08/2025   | 12/08/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 4   | - Tạo AWS Free Tier account <br> - Tìm hiểu AWS Console & AWS CLI <br> - **Thực hành:** <br>&emsp; + Tạo AWS account <br>&emsp; + Cài AWS CLI & cấu hình <br> &emsp; + Cách sử dụng AWS CLI | 13/08/2025   | 13/08/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 5   | - Tìm hiểu EC2 cơ bản: <br>&emsp; + Instance types <br>&emsp; + AMI <br>&emsp; + EBS <br>&emsp; + ... <br> - Các cách remote SSH vào EC2 <br> - Tìm hiểu Elastic IP   <br>                  | 14/08/2025   | 15/08/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 6   | - **Thực hành:** <br>&emsp; + Tạo EC2 instance <br>&emsp; + Kết nối SSH <br>&emsp; + Gắn EBS volume                                                                                         | 15/08/2025   | 15/08/2025      | <https://cloudjourney.awsstudygroup.com/> |
 
+| Thứ   | Công việc                                                                                                                                                                              | Ngày bắt đầu | Ngày hoàn thành | Nguồn tài liệu                                                                                                                                                                                                                  |
+| ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2     | - Tìm hiểu, chọn các công nghệ để thực hiện WorkShop <br> - Thực hiện kết nối, cấu hình Visual Studio 2022 để thực hiện dự án với Backend là .Net và Frontend là Reactjs               | 22/09/2025   | 23/09/2025      |
+| 3     | - Tìm hiểu về các dịch vụ RDS, ECS, S3 và Route 53 <br> **Thực hành:** <br>&emsp; + Thực hành S3, học cách lưu trữ các dữ liệu, file...                                                | 23/09/2025   | 23/09/2025      | <https://www.udemy.com/course/vo-long-ve-amazon-web-services/learn/lecture/47226313#overview> <br> https://www.udemy.com/course/vo-long-ve-amazon-web-services/learn/lecture/47226319#overview                                  |
+| 4 - 5 | - Tiếp tục tìm hiểu các Storage cơ bản còn lại: EBS, EFS <br> **Thực hành:**<br>&emsp;+ Thực hành kết nối SSh thử với EC2, thử nghiệm Elastic IP gắn vào EC2, host thử Apache trên Ec2 | 24/09/2025   | 25/09/2025      | <https://www.udemy.com/course/vo-long-ve-amazon-web-services/learn/lecture/47226319#overview> <br> <https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/learn/lecture/26098410#overview> (31 - 55) |
+| 6     | - Chọn các công nghệ, tải các package, đẩy code lên github: <br>- Chuyển ERD thành cơ sở dữ liệu, tiến hành kết nối cơ bản với migration với dự án                                     | 26/09/2025   | 28/09/2025      |
 
 ### Kết quả đạt được tuần 4:
 
-* Hiểu AWS là gì và nắm được các nhóm dịch vụ cơ bản: 
-  * Compute
-  * Storage
-  * Networking 
-  * Database
-  * ...
+- Hiểu thêm về các loại EC2.
+- Biết thêm về các loại IP.
+- Biết cấu hình Subnet, Internet GateWay để có thể host máy chủ trên EC2.
+- Chuyển cơ sở dữ liệu từ dạng ERD sang dạng dữ liệu trong MySQL
+- Chọn được các phần mềm và công nghệ để thực hiện dự án bao gồm:
 
-* Đã tạo và cấu hình AWS Free Tier account thành công.
-
-* Làm quen với AWS Management Console và biết cách tìm, truy cập, sử dụng dịch vụ từ giao diện web.
-
-* Cài đặt và cấu hình AWS CLI trên máy tính bao gồm:
-  * Access Key
-  * Secret Key
-  * Region mặc định
-  * ...
-
-* Sử dụng AWS CLI để thực hiện các thao tác cơ bản như:
-
-  * Kiểm tra thông tin tài khoản & cấu hình
-  * Lấy danh sách region
-  * Xem dịch vụ EC2
-  * Tạo và quản lý key pair
-  * Kiểm tra thông tin dịch vụ đang chạy
-  * ...
-
-* Có khả năng kết nối giữa giao diện web và CLI để quản lý tài nguyên AWS song song.
-* ...
-
-
+* IDE: Visual Studio 2022
+* Công nghệ làm web:
+  ++ Backend: .Net, JWT, SendGrid, WebSocket, Kafka.
+  ++ Frontend: ReactJS, Boostrap.
+  ++ Database: MySQL
+* Cloud:
+  ++ IAM
+  ++ ECS
+  ++ S3
+  ++ CloudFront
+  ++ RDS
+  ++ VPC
+  ++ ASG
+  ++ ALB
+  ......

@@ -1,6 +1,6 @@
----
+﻿---
 title: "Event 1"
-date: "`r Sys.Date()`"
+date: "2024-01-15"
 weight: 1
 chapter: false
 pre: " <b> 4.1. </b> "
@@ -124,3 +124,5 @@ Attending the **“GenAI-powered App-DB Modernization”** workshop was extremel
 *Add your event photos here*  
 
 > Overall, the event not only provided technical knowledge but also helped me reshape my thinking about application design, system modernization, and cross-team collaboration.
+
+

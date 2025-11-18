@@ -1,6 +1,6 @@
----
+﻿---
 title: "Proposal"
-date: "`r Sys.Date()`"
+date: "2024-01-15"
 weight: 2
 chapter: false
 pre: " <b> 2. </b> "
@@ -113,3 +113,4 @@ Scalable to 10-15 stations.
 #### Long-term Value
 1-year data foundation for AI research.  
 Reusable for future projects.
+
