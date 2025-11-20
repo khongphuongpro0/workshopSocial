@@ -27,7 +27,7 @@ chapter: false
 
 &emsp; **Internship Period:** From August 12, 2025 to November 12, 2025
 
-![Your Profile Picture](/images/avatar.png)
+![Your Profile Picture](./image_profile.jpg)
 
 ### Report Contents
 
