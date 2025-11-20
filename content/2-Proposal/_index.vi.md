@@ -90,9 +90,6 @@ _Yêu cầu kỹ thuật_
 
 ### 6. Ước tính ngân sách
 
-Có thể xem chi phí trên [AWS Pricing Calculator](https://calculator.aws/)  
-Hoặc tải [tệp ước tính ngân sách](../attachments/budget_estimation.pdf).
-
 _Chi phí hạ tầng AWS_ (cho 100 người dùng)
 
 - Amazon ECS Fargate: ~80 USD/tháng (4 tasks: 2 API + 2 SignalR, tương đương t3.small mỗi task)

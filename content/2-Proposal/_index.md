@@ -5,112 +5,140 @@ weight: 2
 chapter: false
 pre: " <b> 2. </b> "
 ---
-{{% notice warning %}}
-⚠️ **Note:** The information below is for reference purposes only. Please **do not copy verbatim** for your report, including this warning.
-{{% /notice %}}
 
-In this section, you need to summarize the contents of the workshop that you **plan** to conduct.
+# Social Media Platform
 
-# IoT Weather Platform for Lab Research
-## A Unified AWS Serverless Solution for Real-Time Weather Monitoring
+## Integrated AWS Cloud Solution for Real-time Social Network
 
 ### 1. Executive Summary
-The IoT Weather Platform is designed for the ITea Lab team in Ho Chi Minh City to enhance weather data collection and analysis. It supports up to 5 weather stations, with potential scalability to 10-15, utilizing Raspberry Pi edge devices with ESP32 sensors to transmit data via MQTT. The platform leverages AWS Serverless services to deliver real-time monitoring, predictive analytics, and cost efficiency, with access restricted to 5 lab members via Amazon Cognito.
+
+The Social Media Platform is designed to provide a comprehensive social communication solution. The platform supports up to 100 concurrent users, scalable to 500 users, using a .NET 8 backend combined with SignalR WebSocket for real-time communication. The platform leverages AWS Cloud services to deliver real-time chat, full social media features (post, comment, reaction, share, story, group, fanpage), and high security with JWT authentication.
 
 ### 2. Problem Statement
-### What’s the Problem?
-Current weather stations require manual data collection, becoming unmanageable with multiple units. There is no centralized system for real-time data or analytics, and third-party platforms are costly and overly complex.
 
-### The Solution
-The platform uses AWS IoT Core to ingest MQTT data, AWS Lambda and API Gateway for processing, Amazon S3 for storage (including a data lake), and AWS Glue Crawlers and ETL jobs to extract, transform, and load data from the S3 data lake to another S3 bucket for analysis. AWS Amplify with Next.js provides the web interface, and Amazon Cognito ensures secure access. Similar to Thingsboard and CoreIoT, users can register new devices and manage connections, though this platform operates on a smaller scale and is designed for private use. Key features include real-time dashboards, trend analysis, and low operational costs.
+_Current Problem_
+Existing social media platforms like Facebook and Instagram are overly complex with many unnecessary features, have privacy issues, and high costs. There is no dedicated platform for small communities with customization capabilities and full data ownership.
 
-### Benefits and Return on Investment
-The solution establishes a foundational resource for lab members to develop a larger IoT platform, serving as a study resource, and provides a data foundation for AI enthusiasts for model training or analysis. It reduces manual reporting for each station via a centralized platform, simplifying management and maintenance, and improves data reliability. Monthly costs are $0.66 USD per the AWS Pricing Calculator, with a 12-month total of $7.92 USD. All IoT equipment costs are covered by the existing weather station setup, eliminating additional development expenses. The break-even period of 6-12 months is achieved through significant time savings from reduced manual work.
+_Solution_
+The platform uses Amazon ECS with Fargate to run .NET 8 backend containers, Application Load Balancer to distribute traffic (supports WebSocket), Amazon RDS SQL Server for data storage (with AWS DMS for migration), Amazon S3 combined with CloudFront CDN to host and distribute the React frontend and media files. VPC with Subnets and Security Groups ensures network security. SignalR WebSocket provides real-time chat, JWT ensures authentication/authorization, and SendGrid sends confirmation emails. CloudWatch monitors the system. Similar to Facebook and Instagram, users can post, real-time chat (1-1 and group), comment, react, share, create stories (auto-delete after 24h), manage groups and fanpages, add friends, follow and block users. Key features include full chat (history, stickers, reactions, edit/delete messages), comprehensive social features, and optimized operating costs.
+
+_Benefits and Return on Investment (ROI)_
+The solution creates a private social media platform with full data control and high customization, while providing data sources for AI/ML research (sentiment analysis, recommendation systems). The platform replaces expensive enterprise solutions through self-managed systems, simplifies internal communication, and improves engagement. Estimated monthly cost is $90-120 USD for 100 users (self-estimated, not using AWS calculation tools), totaling $1,080-1,440 USD for 12 months. Payback period of 3-6 months through license cost savings and monetization capabilities.
 
 ### 3. Solution Architecture
-The platform employs a serverless AWS architecture to manage data from 5 Raspberry Pi-based stations, scalable to 15. Data is ingested via AWS IoT Core, stored in an S3 data lake, and processed by AWS Glue Crawlers and ETL jobs to transform and load it into another S3 bucket for analysis. Lambda and API Gateway handle additional processing, while Amplify with Next.js hosts the dashboard, secured by Cognito. The architecture is detailed below:
 
-![IoT Weather Station Architecture](/images/2-Proposal/edge_architecture.jpeg)
+The platform applies Client-Server architecture with AWS Cloud Infrastructure to manage 100 concurrent users, scalable to 500. React frontend is hosted on S3 and distributed via CloudFront CDN. Traffic goes through Application Load Balancer (supports HTTP/HTTPS and WebSocket) to ECS Fargate containers running .NET 8 backend with SignalR. Primary database is RDS SQL Server (Single-AZ for cost savings), media files stored in S3 (distributed via CloudFront). VPC with Public/Private Subnets and Security Groups ensures network isolation. AWS DMS migrates database to cloud, CloudWatch monitors.
 
-![IoT Weather Platform Architecture](/images/2-Proposal/platform_architecture.jpeg)
+![AWS Infrastructure Architecture](./images/aws-social-media.png)
 
-### AWS Services Used
-- **AWS IoT Core**: Ingests MQTT data from 5 stations, scalable to 15.
-- **AWS Lambda**: Processes data and triggers Glue jobs (two functions).
-- **Amazon API Gateway**: Facilitates web app communication.
-- **Amazon S3**: Stores raw data in a data lake and processed outputs (two buckets).
-- **AWS Glue**: Crawlers catalog data, and ETL jobs transform and load it.
-- **AWS Amplify**: Hosts the Next.js web interface.
-- **Amazon Cognito**: Secures access for lab users.
+_AWS Services Used_
 
-### Component Design
-- **Edge Devices**: Raspberry Pi collects and filters sensor data, sending it to IoT Core.
-- **Data Ingestion**: AWS IoT Core receives MQTT messages from the edge devices.
-- **Data Storage**: Raw data is stored in an S3 data lake; processed data is stored in another S3 bucket.
-- **Data Processing**: AWS Glue Crawlers catalog the data, and ETL jobs transform it for analysis.
-- **Web Interface**: AWS Amplify hosts a Next.js app for real-time dashboards and analytics.
-- **User Management**: Amazon Cognito manages user access, allowing up to 5 active accounts.
+- _Amazon ECS + Fargate_: Run .NET 8 backend containers, auto-scaling
+- _Amazon ECR_: Store Docker images
+- _Application Load Balancer_: Distribute traffic, support WebSocket for SignalR
+- _Amazon RDS (SQL Server)_: Primary database, Single-AZ deployment
+- _AWS DMS_: Migrate database from on-premise to RDS
+- _Amazon S3_: Store frontend (bucket 1) and media files (bucket 2)
+- _Amazon CloudFront_: CDN for frontend and media distribution
+- _Amazon VPC_: Network isolation with public/private subnets
+- _Security Groups_: Firewall rules for ALB, ECS, RDS
+- _AWS Route 53_: DNS management (optional)
+- _Amazon CloudWatch_: Logs, metrics, alarms
+
+_Component Design_
+
+- _Frontend_: React app hosted on S3, distributed via CloudFront, accesses backend via HTTPS/WebSocket
+- _Load Balancer_: ALB routes traffic to ECS tasks, sticky sessions for SignalR
+- _Backend Services_: ECS Fargate runs 4 tasks (2 REST API + 2 SignalR Hub)
+- _Database_: RDS SQL Server stores users, posts, messages, stories, groups, pages, relationships
+- _Storage_: S3 stores avatars, post media, story media; CloudFront cache and distribution
+- _Authentication_: JWT tokens, SendGrid sends verification emails
+- _Monitoring_: CloudWatch collects logs and metrics from ECS, ALB, RDS
 
 ### 4. Technical Implementation
-**Implementation Phases**
-This project has two parts—setting up weather edge stations and building the weather platform—each following 4 phases:
-- Build Theory and Draw Architecture: Research Raspberry Pi setup with ESP32 sensors and design the AWS serverless architecture (1 month pre-internship)
-- Calculate Price and Check Practicality: Use AWS Pricing Calculator to estimate costs and adjust if needed (Month 1).
-- Fix Architecture for Cost or Solution Fit: Tweak the design (e.g., optimize Lambda with Next.js) to stay cost-effective and usable (Month 2).
-- Develop, Test, and Deploy: Code the Raspberry Pi setup, AWS services with CDK/SDK, and Next.js app, then test and release to production (Months 2-3).
 
-**Technical Requirements**
-- Weather Edge Station: Sensors (temperature, humidity, rainfall, wind speed), a microcontroller (ESP32), and a Raspberry Pi as the edge device. Raspberry Pi runs Raspbian, handles Docker for filtering, and sends 1 MB/day per station via MQTT over Wi-Fi.
-- Weather Platform: Practical knowledge of AWS Amplify (hosting Next.js), Lambda (minimal use due to Next.js), AWS Glue (ETL), S3 (two buckets), IoT Core (gateway and rules), and Cognito (5 users). Use AWS CDK/SDK to code interactions (e.g., IoT Core rules to S3). Next.js reduces Lambda workload for the fullstack web app.
+_Implementation Phases_
+The project consists of 2 parts — backend/frontend development and AWS infrastructure deployment — across 4 phases:
 
-### 5. Timeline & Milestones
-**Project Timeline**
-- Pre-Internship (Month 0): 1 month for planning and old station review.
-- Internship (Months 1-3): 3 months.
-    - Month 1: Study AWS and upgrade hardware.
-    - Month 2: Design and adjust architecture.
-    - Month 3: Implement, test, and launch.
-- Post-Launch: Up to 1 year for research.
+1. _Planning and Architecture Design_: Research .NET 8, SignalR, React, AWS services and design database schema, system architecture (Month 1, Week 1-2)
+2. _Core Features Development and Continuing AWS Architecture Research_: Code authentication, user management, post system, story feature (Month 1 Week 3 - Month 2)
+3. _Real-time Features Development_: Implement SignalR chat (1-1 and group), notifications (Month 2-3)
+4. _Optimization, Deployment_: Container packaging, AWS deployment with CDK/CloudFormation (Month 3)
+
+_Technical Requirements_
+
+- _Backend_: .NET 8 with SignalR (WebSocket), Entity Framework Core, JWT authentication. Package application with Docker, push images to ECR, deploy to ECS Fargate with 4 tasks (2 API + 2 SignalR).
+- _Frontend_: React with SignalR Client, Tailwind CSS. Build static files deploy to S3, distribute through CloudFront service.
+- _Database_: SQL Server with schema: Users, Posts, Comments, Reactions, Messages, Conversations, GroupChats, Stories, Groups, Pages, Friendships, Follows. Optimize by adding Indexes for related tables. Use AWS DMS to migrate from local to RDS.
+- _Infrastructure_: Use AWS CDK/CloudFormation to configure VPC, Subnets, Security Groups, ALB, ECS Cluster, RDS, S3, CloudFront. Build CI/CD pipeline with GitHub Actions: build → test → push to ECR → update ECS service → deploy frontend to S3.
+
+### 5. Roadmap & Implementation Milestones
+
+- _Pre-internship (Month 0)_: Self-learn .NET, basic React research
+- _Internship (Month 1–3)_:
+  - Month 1:
+    - Week 1-2: Architecture design, database design, AWS setup
+    - Week 3-4: User authentication, user APIs
+  - Month 2:
+    - Week 5-6: Post system
+    - Week 7-8: Groups, Pages
+    - Week 9-10: 1-1 Chat with SignalR
+  - Month 3:
+    - Week 11: Group chat, Notifications
+    - Week 12: Testing, container packaging, AWS deployment, production launch
+- _Post-deployment_: Monitoring, maintenance, feature upgrades over 6-12 months
 
 ### 6. Budget Estimation
-You can find the budget estimation on the [AWS Pricing Calculator](https://calculator.aws/#/estimate?id=621f38b12a1ef026842ba2ddfe46ff936ed4ab01).  
-Or you can download the [Budget Estimation File](../attachments/budget_estimation.pdf).
 
-### Infrastructure Costs
-- AWS Services:
-    - AWS Lambda: $0.00/month (1,000 requests, 512 MB storage).
-    - S3 Standard: $0.15/month (6 GB, 2,100 requests, 1 GB scanned).
-    - Data Transfer: $0.02/month (1 GB inbound, 1 GB outbound).
-    - AWS Amplify: $0.35/month (256 MB, 500 ms requests).
-    - Amazon API Gateway: $0.01/month (2,000 requests).
-    - AWS Glue ETL Jobs: $0.02/month (2 DPUs).
-    - AWS Glue Crawlers: $0.07/month (1 crawler).
-    - MQTT (IoT Core): $0.08/month (5 devices, 45,000 messages).
+_AWS Infrastructure Costs_ (for 100 users)
 
-Total: $0.7/month, $8.40/12 months
+- Amazon ECS Fargate: ~80 USD/month (4 tasks: 2 API + 2 SignalR, equivalent to t3.small per task)
+- Application Load Balancer: ~20 USD/month
+- Amazon RDS SQL Server: ~30 USD/month (db.t3.micro, 20GB, Single-AZ)
+- Amazon S3: ~2 USD/month (store 50GB)
+- CloudFront: ~5 USD/month (transfer 100GB data)
+- Data Transfer: ~10 USD/month (outbound data)
+- Amazon ECR: ~1 USD/month
+- CloudWatch: ~5 USD/month (more logs due to 4 tasks)
+- AWS Secrets Manager: ~1 USD/month
+- Route 53: ~1 USD/month (optional)
 
-- Hardware: $265 one-time (Raspberry Pi 5 and sensors).
+_Total_: ~155 USD/month, 1,860 USD/12 months
+
+_Optimized with AWS Free Tier_: ~90-120 USD/month, 1,080-1,440 USD/12 months
+
+_Development Costs_
+
+- Software: 0 USD (Visual Studio Community, VS Code, Git - free)
+- Domain: ~12 USD/year
+- SendGrid: 0 USD (free tier: 100 emails/day)
+
+_Total_: ~12 USD/year for domain
 
 ### 7. Risk Assessment
-#### Risk Matrix
-- Network Outages: Medium impact, medium probability.
-- Sensor Failures: High impact, low probability.
-- Cost Overruns: Medium impact, low probability.
 
-#### Mitigation Strategies
-- Network: Local storage on Raspberry Pi with Docker.
-- Sensors: Regular checks and spares.
-- Cost: AWS budget alerts and optimization.
+_Risk Matrix_
 
-#### Contingency Plans
-- Revert to manual methods if AWS fails.
-- Use CloudFormation for cost-related rollbacks.
+- High user load: Medium impact, low probability
+- Database failure: High impact, low probability
+- Security breach: High impact, medium probability
+- Budget overrun: Low impact, low probability
+
+_Mitigation Strategies_
+
+- User load: Auto-scale ECS when needed, ALB load balancing, optimize database indexes
+- Database: Automatic daily backups, point-in-time recovery, can upgrade to Multi-AZ if needed
+- Security: AWS WAF, JWT authentication, input sanitization, HTTPS/WSS encryption, Security Groups
+- Costs: CloudWatch billing alerts ($100/month threshold), turn off unused resources
+
+_Contingency Plan_
+
+- Restore from RDS snapshot if database fails
+- Scale down instances if budget exceeded
+- Use CloudFormation rollback if deployment issues
 
 ### 8. Expected Outcomes
-#### Technical Improvements: 
-Real-time data and analytics replace manual processes.  
-Scalable to 10-15 stations.
-#### Long-term Value
-1-year data foundation for AI research.  
-Reusable for future projects.
 
+_Technical Improvements_: Real-time chat with response time < 100ms. API response time < 300ms. Support 100 concurrent users, scalable to 500. Uptime 99%.
+
+_Long-term Value_: 6+ months data platform for AI/ML research (sentiment analysis, recommendation systems). Full-stack development experience with modern technologies. AWS cloud expertise and DevOps practices. Reusable/extendable for future projects (video call, live streaming, e-commerce).
