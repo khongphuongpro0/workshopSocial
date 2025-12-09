@@ -1,97 +1,78 @@
 ﻿---
-title : "VPC Endpoint Policies"
-date: "2024-01-15"
-weight : 5
-chapter : false
-pre : " <b> 5.5 </b> "
+title: "Thiết lập Subnet Group và Database RDS"
+date: 2025-12-09T10:35:00+07:00
+weight: 4
+chapter: false
+pre: "<b>5.5.</b> "
 ---
 
-Khi bạn tạo một Interface Endpoint  hoặc cổng, bạn có thể đính kèm một chính sách điểm cuối để kiểm soát quyền truy cập vào dịch vụ mà bạn đang kết nối. Chính sách VPC Endpoint là chính sách tài nguyên IAM mà bạn đính kèm vào điểm cuối. Nếu bạn không đính kèm chính sách khi tạo điểm cuối, thì AWS sẽ đính kèm chính sách mặc định cho bạn để cho phép toàn quyền truy cập vào dịch vụ thông qua điểm cuối.
+Trong bước này, ta sẽ tạo **DB Subnet Group** (bắt buộc cho RDS) và sau đó khởi tạo **Amazon RDS** (Relational Database Service) cho database backend.
 
-Bạn có thể tạo chính sách chỉ hạn chế quyền truy cập vào các S3 bucket cụ thể. Điều này hữu ích nếu bạn chỉ muốn một số Bộ chứa S3 nhất định có thể truy cập được thông qua điểm cuối.
+## 5.1. Tạo DB Subnet Group
 
-Trong phần này, bạn sẽ tạo chính sách VPC Endpoint hạn chế quyền truy cập vào S3 bucket được chỉ định trong chính sách VPC Endpoint.
+1.  Trong dịch vụ **RDS**, vào tab **Subnet Groups**, nhấn **Create DB Subnet Group**.
 
-![endpoint diagram](/images/5-Workshop/5.5-Policy/s3-bucket-policy.png)
+![Ta chọn vào tab subnet group trong service rds, đặt tên, chọn vpc ta mới tạo](./images/SubnetGroup_1.png)
 
-#### Kết nối tới EC2 và xác minh kết nối tới S3. 
+2.  Đặt tên (ví dụ: `social-media-db-subnet-group`), chọn VPC đã tạo.
+3.  Chọn 2 AZ tương ứng và 2 **Private Subnet** đã tạo cho RDS (`Private-RDS-A` và `Private-RDS-B`).
 
-1. Bắt đầu một phiên AWS Session Manager mới trên máy chủ có tên là Test-Gateway-Endpoint. Từ phiên này, xác minh rằng bạn có thể liệt kê nội dung của bucket mà bạn đã tạo trong Phần 1: Truy cập S3 từ VPC.
+![Tiếp đến chọn 2 az tương ứng và 2 private subnet ở 2 az khác nhau](./images/SubnetGroup_2.png)
 
-```
-aws s3 ls s3://<your-bucket-name>
-```
-![test](/images/5-Workshop/5.5-Policy/test1.png)
+4.  Tạo thành công Subnet Group.
 
-Nội dung của bucket bao gồm hai tệp có dung lượng 1GB đã được tải lên trước đó.
+![Tạo thành công subnet group](./images/SubnetGroup_3.png)
 
-2. Tạo một bucket S3 mới; tuân thủ mẫu đặt tên mà bạn đã sử dụng trong Phần 1, nhưng thêm '-2' vào tên. Để các trường khác là mặc định và nhấp vào **Create**.
+## 5.2. Tạo Database RDS (MySQL)
 
-![create bucket](/images/5-Workshop/5.5-Policy/create-bucket.png)
+1.  Vào dịch vụ **RDS** và ấn **Create database**.
 
-3. Tạo bucket thành công.
+![Vào service RDS và ấn tạo database](./images/RDS_1.png)
 
-![Success](/images/5-Workshop/5.5-Policy/create-bucket-success.png)
+2.  Chọn Engine **MySQL**.
 
-Policy mặc định cho phép truy cập vào tất cả các S3 Buckets thông qua VPC endpoint.
+![Ở đây ta dùng mysql nên sẽ chọn là mysql](./images/RDS_2.png)
 
-4. Trong giao diện **Edit Policy**, sao chép và dán theo policy sau, thay thế yourbucketname-2 với tên bucket thứ hai của bạn. Policy này sẽ cho phép truy cập đến bucket mới thông qua VPC endpoint, nhưng không cho phép truy cập đến các bucket còn lại. Chọn **Save** để kích hoạt policy.
+3.  Chọn phiên bản và **Template** là **Free tier** để tiết kiệm chi phí.
 
+![Tiếp đến ta chọn phiên bản và template, vì tài khoản em đang dùng vẫn còn được free tier nên sẽ chọn free tier để tiết kiệm chi phí](./images/RDS_3.png)
 
-```
-{
-  "Id": "Policy1631305502445",
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "Stmt1631305501021",
-      "Action": "s3:*",
-      "Effect": "Allow",
-      "Resource": [
-      				"arn:aws:s3:::yourbucketname-2",
-       				"arn:aws:s3:::yourbucketname-2/*"
-       ],
-      "Principal": "*"
-    }
-  ]
-}
-```
+4.  Đặt tên Database, tên tài khoản (**Master username**) và mật khẩu (**Master password**).
 
-![custom policy](/images/5-Workshop/5.5-Policy/policy2.png)
+![Ta đặt tên database, đặt tên tài khoản, mật khẩu](./images/RDS_4.png)
 
-Cấu hình policy thành công.
+5.  Chọn **DB instance class** là **t4g.micro** (Free tier).
 
-![success](/images/5-Workshop/5.5-Policy/success.png)
+![Ở đây vì là free tier nên sẽ chọn là t4g.micro](./images/RDS_5.png)
 
-5. Từ session của bạn trên Test-Gateway-Endpoint instance, kiểm tra truy cập đến S3 bucket bạn tạo ở bước đầu
+6.  Chọn **Storage** là **gp3**.
 
-```
-aws s3 ls s3://<yourbucketname>
-```
+![Chọn Storage là gp3](./images/RDS_6.png)
 
-Câu lệnh trả về lỗi bởi vì truy cập vào S3 bucket không có quyền trong VPC endpoint policy.
+7.  Chọn VPC và **Subnet Group** đã tạo ở trên.
 
-![error](/images/5-Workshop/5.5-Policy/error.png)
+![Chọn vpc và subnet group đã tạo ở trên](./images/RDS_7.png)
 
-6. Trở lại home directory của bạn trên EC2 instance ```cd~```
+8.  Ở phần **Public access**, chọn **No** (Vì đây là Private Subnet).
 
-+ Tạo file ```fallocate -l 1G test-bucket2.xyz ```
-+ Sao chép file lên bucket thứ  2 ```aws s3 cp test-bucket2.xyz s3://<your-2nd-bucket-name>```
+![ở phần public access ta chọn no](./images/RDS_8.png)
 
-![success](/images/5-Workshop/5.5-Policy/test2.png)
+9.  Sau đó ấn **Create database**. Tạo thành công.
 
-Thao tác này được cho phép bởi VPC endpoint policy.
+### 5.2.1. Chỉnh sửa Public Access (Tạm thời) và Migration
 
-![success](/images/5-Workshop/5.5-Policy/test2-success.png)
+1.  Để **migration** database ban đầu, ta cần tạm thời chỉnh **Public access** thành **Yes** (có thể dùng **DMS** với database kích thước lớn).
 
-Sau đó chúng ta kiểm tra truy cập vào S3 bucket đầu tiên
+![Ta cần chỉnh public access để có thể migration database lên (có thể dùng DMS với database với kích thước lớn)](./images/RDS_9.png)
 
- ```aws s3 cp test-bucket2.xyz s3://<your-1st-bucket-name>```
+2.  Ta chỉnh sửa thành công.
 
- ![fail](/images/5-Workshop/5.5-Policy/test2-fail.png)
+![Ta chỉnh sửa thành công](./images/RDS_10.png)
 
- Câu lệnh xảy ra lỗi bởi vì bucket không có quyền truy cập bởi VPC endpoint policy.
+3.  Thực hiện Migration/Import Database: Có thể dùng MySQL Workbench hoặc Command Line.
 
-Trong phần này, bạn đã tạo chính sách VPC Endpoint cho Amazon S3 và sử dụng AWS CLI để kiểm tra chính sách. Các hoạt động AWS CLI liên quan đến bucket S3 ban đầu của bạn thất bại vì bạn áp dụng một chính sách chỉ cho phép truy cập đến bucket thứ hai mà bạn đã tạo. Các hoạt động AWS CLI nhắm vào bucket thứ hai của bạn thành công vì chính sách cho phép chúng. Những chính sách này có thể hữu ích trong các tình huống khi bạn cần kiểm soát quyền truy cập vào tài nguyên thông qua VPC Endpoint.
+![Ở đây em dùng comman line](./images/RDS_11.png)
 
+4.  Kiểm tra bằng cách kết nối MySQL Workbench với RDS. Database đã có dữ liệu.
 
+![Kiểm tra bằng cách kết nối mysql workbench với rds](./images/RDS_12.png)

@@ -1,129 +1,94 @@
 ﻿---
-title: "Blog 3"
-date: "2024-01-15"
+title: "Blog 3. Xây dựng ứng dụng SAP nhanh chóng với Amazon Q Developer"
+date: "2025-07-01"
 weight: 1
 chapter: false
 pre: " <b> 3.3. </b> "
+categories: ["Amazon Q", "Amazon Q Developer", "Announcements", "SAP on AWS"]
+authors: ["Gyan Mishra", "Beth Sharp", "Erik Kamman", "Padaval Harshavardhan"]
 ---
 
-{{% notice warning %}}
-⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
-{{% /notice %}}
+## Giới thiệu
 
-# Bắt đầu với healthcare data lakes: Sử dụng microservices
+Tất cả các công ty đều đang tìm kiếm những cách giúp các nhà phát triển của họ tăng năng suất, xây dựng ứng dụng nhanh hơn và đơn giản hóa gánh nặng trong việc duy trì mã cũ. **Amazon Q Developer** là một công cụ AI sinh mã (generative AI tool) có thể giúp các công ty loại bỏ gánh nặng kỹ thuật gắn liền với môi trường SAP được tùy chỉnh quá mức của họ, đồng thời triển khai các tính năng mới nhanh hơn. Trong bài viết này, chúng ta sẽ cùng tìm hiểu cách bạn có thể sử dụng Amazon Q Developer để giúp các nhà phát triển SAP của mình cải thiện năng suất và đổi mới nhanh hơn.
 
-Các data lake có thể giúp các bệnh viện và cơ sở y tế chuyển dữ liệu thành những thông tin chi tiết về doanh nghiệp và duy trì hoạt động kinh doanh liên tục, đồng thời bảo vệ quyền riêng tư của bệnh nhân. **Data lake** là một kho lưu trữ tập trung, được quản lý và bảo mật để lưu trữ tất cả dữ liệu của bạn, cả ở dạng ban đầu và đã xử lý để phân tích. data lake cho phép bạn chia nhỏ các kho chứa dữ liệu và kết hợp các loại phân tích khác nhau để có được thông tin chi tiết và đưa ra các quyết định kinh doanh tốt hơn.
+SAP là một ứng dụng có tính chất quan trọng trong việc vận hành các hoạt động kinh doanh cho hàng nghìn công ty trên toàn cầu. Trong suốt nhiều năm, rất nhiều khách hàng đã tùy chỉnh SAP để đáp ứng các yêu cầu riêng biệt của doanh nghiệp mình bằng ngôn ngữ lập trình **ABAP**.
 
-Bài đăng trên blog này là một phần của loạt bài lớn hơn về việc bắt đầu cài đặt data lake dành cho lĩnh vực y tế. Trong bài đăng blog cuối cùng của tôi trong loạt bài, *“Bắt đầu với data lake dành cho lĩnh vực y tế: Đào sâu vào Amazon Cognito”*, tôi tập trung vào các chi tiết cụ thể của việc sử dụng Amazon Cognito và Attribute Based Access Control (ABAC) để xác thực và ủy quyền người dùng trong giải pháp data lake y tế. Trong blog này, tôi trình bày chi tiết cách giải pháp đã phát triển ở cấp độ cơ bản, bao gồm các quyết định thiết kế mà tôi đã đưa ra và các tính năng bổ sung được sử dụng. Bạn có thể truy cập các code samples cho giải pháp tại Git repo này để tham khảo.
-
----
-
-## Hướng dẫn kiến trúc
-
-Thay đổi chính kể từ lần trình bày cuối cùng của kiến trúc tổng thể là việc tách dịch vụ đơn lẻ thành một tập hợp các dịch vụ nhỏ để cải thiện khả năng bảo trì và tính linh hoạt. Việc tích hợp một lượng lớn dữ liệu y tế khác nhau thường yêu cầu các trình kết nối chuyên biệt cho từng định dạng; bằng cách giữ chúng được đóng gói riêng biệt với microservices, chúng ta có thể thêm, xóa và sửa đổi từng trình kết nối mà không ảnh hưởng đến những kết nối khác. Các microservices được kết nối rời thông qua tin nhắn publish/subscribe tập trung trong cái mà tôi gọi là “pub/sub hub”.
-
-Giải pháp này đại diện cho những gì tôi sẽ coi là một lần lặp nước rút hợp lý khác từ last post của tôi. Phạm vi vẫn được giới hạn trong việc nhập và phân tích cú pháp đơn giản của các **HL7v2 messages** được định dạng theo **Quy tắc mã hóa 7 (ER7)** thông qua giao diện REST.
-
-**Kiến trúc giải pháp bây giờ như sau:**
-
-> *Hình 1. Kiến trúc tổng thể; những ô màu thể hiện những dịch vụ riêng biệt.*
+Mặc dù các chương trình ABAP này đã giúp các công ty điều chỉnh SAP, nhưng điều đó cũng khiến môi trường SAP trở nên cực kỳ phức tạp, khó vận hành và nâng cấp. Hiện nay, khi các công ty muốn chuyển lên cloud, triển khai các giải pháp mới nhất của SAP như S/4HANA, và áp dụng chiến lược **“clean core”**, thì các đoạn mã kế thừa này trở thành một thách thức lớn.
 
 ---
 
-Mặc dù thuật ngữ *microservices* có một số sự mơ hồ cố hữu, một số đặc điểm là chung:  
-- Chúng nhỏ, tự chủ, kết hợp rời rạc  
-- Có thể tái sử dụng, giao tiếp thông qua giao diện được xác định rõ  
-- Chuyên biệt để giải quyết một việc  
-- Thường được triển khai trong **event-driven architecture**
+## Đơn giản hóa việc hiện đại hóa SAP với Amazon Q Developer
 
-Khi xác định vị trí tạo ranh giới giữa các microservices, cần cân nhắc:  
-- **Nội tại**: công nghệ được sử dụng, hiệu suất, độ tin cậy, khả năng mở rộng  
-- **Bên ngoài**: chức năng phụ thuộc, tần suất thay đổi, khả năng tái sử dụng  
-- **Con người**: quyền sở hữu nhóm, quản lý *cognitive load*
+Amazon Q Developer có thể giúp các công ty vượt qua những thách thức của các đoạn mã cũ, cho phép nâng cấp SAP nhanh hơn, tiết kiệm hơn. Điều này cũng giúp đơn giản hóa việc tuân thủ quy định, vá bảo mật, và tận dụng những tính năng phần mềm mới. Amazon Q Developer có khả năng tự động tạo tài liệu, cả về đặc tả chức năng lẫn kỹ thuật cho mã ABAP kế thừa, giúp tiết kiệm hàng giờ làm việc quý báu.
 
----
+Amazon Q Developer hoạt động trên toàn bộ hệ sinh thái khung lập trình của SAP, bao gồm **classical SAP ABAP, SAP ABAP RESTful Application Programming Model (RAP)**, và **SAP Cloud Application Programming Model (CAP)**. Q Developer có sẵn dưới dạng tiện ích mở rộng IDE trong VS Code, Eclipse, và nhiều công cụ khác.
 
-## Lựa chọn công nghệ và phạm vi giao tiếp
+Các khách hàng sử dụng Q Developer cho các ngôn ngữ lập trình khác đã báo cáo mức tăng năng suất của lập trình viên lên đến **40%**, và tốc độ phát triển nhanh hơn đến **80%** trong nhiều tác vụ khác nhau.
 
-| Phạm vi giao tiếp                        | Các công nghệ / mô hình cần xem xét                                                        |
-| ---------------------------------------- | ------------------------------------------------------------------------------------------ |
-| Trong một microservice                   | Amazon Simple Queue Service (Amazon SQS), AWS Step Functions                               |
-| Giữa các microservices trong một dịch vụ | AWS CloudFormation cross-stack references, Amazon Simple Notification Service (Amazon SNS) |
-| Giữa các dịch vụ                         | Amazon EventBridge, AWS Cloud Map, Amazon API Gateway                                      |
+> **Saul Dave, Giám đốc cấp cao mảng hệ thống doanh nghiệp tại Zappos.com**, đã chia sẻ rằng: **Amazon Q Developer sẽ là một bước ngoặt lớn cho nhóm phát triển và hỗ trợ ứng dụng ABAP của chúng tôi.**
+
+Giờ đây, chúng ta sẽ cùng đi sâu vào bốn ví dụ cụ thể để thấy cách Q Developer có thể cải thiện năng suất cho các lập trình viên SAP:
+
+1.  Tạo mã ABAP
+2.  Tạo ứng dụng BTP và Fiori
+3.  Tạo test case
+4.  Viết tài liệu cho mã ABAP kế thừa
 
 ---
 
-## The pub/sub hub
+### Tạo mã ABAP
 
-Việc sử dụng kiến trúc **hub-and-spoke** (hay message broker) hoạt động tốt với một số lượng nhỏ các microservices liên quan chặt chẽ.  
-- Mỗi microservice chỉ phụ thuộc vào *hub*  
-- Kết nối giữa các microservice chỉ giới hạn ở nội dung của message được xuất  
-- Giảm số lượng synchronous calls vì pub/sub là *push* không đồng bộ một chiều
+Amazon Q Developer có thể hiểu các prompt ngôn ngữ tự nhiên để tạo ra mã có chức năng đầy đủ. Trong ví dụ này, mã ABAP được sinh ra để hiển thị danh sách các đơn hàng bán mở, có khả năng lọc theo số đơn hàng hoặc mã khách hàng.
 
-Nhược điểm: cần **phối hợp và giám sát** để tránh microservice xử lý nhầm message.
+Lập trình viên chỉ cần nhập prompt sau vào Q Developer:
+
+> “Generate an ABAP report named zhprp_sales zhprp_sales_order_overview, showing list of open sales orders, filter either by order number or customer number (sold-to-party). Include: Sales order number, Sold-to-party, Order Creation date, Line Item number, Material Number, Ordered quantity, Confirmed Quantity. Order the records by sales order number. Display the output in ALV format.”
+
+### Tạo mã cho Fiori và BTP
+
+Ví dụ tiếp theo minh họa cách phát triển một ứng dụng Fiori hoàn chỉnh bằng Q Developer. Ví dụ này sử dụng một prompt duy nhất để hướng dẫn từng bước tạo ra cả phần front-end và back-end. Prompt được sử dụng như sau:
+
+> “Provide me with all the things I need to do to create a fiori application for the sales order(create, update, delete) and then you can handhold me while I am creating each step. In addition to that I want to have a class to insert dummy data and test classes for my cds view for TDD.”
+
+Amazon Q áp dụng phương pháp phát triển theo tầng:
+
+- **Tầng Cơ sở dữ liệu:** Tạo ra các cấu trúc bảng cần thiết.
+- **Tầng CDS:** Thiết lập root CDS view để trừu tượng hóa các bảng cơ sở dữ liệu.
+- **Tầng Nghiệp vụ:** Tạo định nghĩa hành vi cho CDS view, bao gồm các lớp triển khai hành vi và lớp kiểm tra.
+- **Tầng Dịch vụ:** Tạo định nghĩa service và ràng buộc cho OData V2.
+- **Tầng UI:** Hỗ trợ UI annotations và tạo custom controller actions cùng HTML UI5 components để hoàn thiện ứng dụng Fiori.
+
+### Tạo các trường hợp kiểm thử
+
+Amazon Q Developer giúp tạo các lớp kiểm thử cho mã nguồn hiện có khi tài liệu hoặc lập trình viên ban đầu không còn sẵn. Người dùng chỉ cần dán đoạn mã của họ vào cửa sổ chat nội tuyến của Q, hệ thống sẽ phân tích và tự động tạo ra các kịch bản kiểm thử toàn diện.
+
+> “Generate unit test class for public methods “Provide your class logic/details here”
+
+Tính năng này cho phép các lập trình viên dễ dàng kiểm thử logic nghiệp vụ ngay cả sau nhiều lần chỉnh sửa, giúp tiết kiệm đáng kể công sức cho việc kiểm thử thủ công.
+
+### Tài liệu hóa mã ABAP cũ
+
+Ví dụ sau đây minh họa cách Amazon Q Developer phân tích mã ABAP và tự động tạo tài liệu kỹ thuật dựa trên các mẫu tùy chỉnh của bạn. Amazon Q Developer đơn giản hóa quy trình tài liệu hóa bằng cách trích xuất các thông tin chính và duy trì tiêu chuẩn định dạng nhất quán. Đoạn prompt được sử dụng như sau:
+
+> “Generate a technical documentation of the above ABAP code. Make sure to provide highly detailed documentation, clearly explaining the action performed each of the components using following pointers as template:
+>
+> 1. Class/Program name
+> 2. Class/Program Overview
+> 3. Technical Specifications (3.1 Data Structure, 3.2 Selection Screen)
+> 4. Main Components (4.1 Subroutines/Methods)
+> 5. Test Implementation (5.1 Test Methods, 5.2 Test Setup)
+> 6. Technical Dependencies
+> 7. Error Handling
+> 8. Performance Considerations”
+
+Tính năng này cho phép các tổ chức dễ dàng hiểu và ghi lại các quy trình nghiệp vụ bị ảnh hưởng, giúp ích trong quá trình di chuyển và chuyển giao kiến thức.
 
 ---
 
-## Core microservice
+## Mô hình định giá
 
-Cung cấp dữ liệu nền tảng và lớp truyền thông, gồm:  
-- **Amazon S3** bucket cho dữ liệu  
-- **Amazon DynamoDB** cho danh mục dữ liệu  
-- **AWS Lambda** để ghi message vào data lake và danh mục  
-- **Amazon SNS** topic làm *hub*  
-- **Amazon S3** bucket cho artifacts như mã Lambda
+- **Amazon Q Developer Free Tier:** Cung cấp 50 lượt tương tác chat mỗi tháng, hỗ trợ phát triển phần mềm 5 lần mỗi tháng, và chuyển đổi tối đa 1.000 dòng mã mỗi tháng.
+- **Pro Tier:** Bao gồm tất cả tính năng trong gói miễn phí, đồng thời bổ sung các tính năng kiểm soát truy cập ở cấp độ doanh nghiệp, khả năng tùy chỉnh Q Developer phù hợp với cơ sở mã của bạn, và giới hạn sử dụng cao hơn cho các tính năng nâng cao.
 
-> Chỉ cho phép truy cập ghi gián tiếp vào data lake qua hàm Lambda → đảm bảo nhất quán.
-
----
-
-## Front door microservice
-
-- Cung cấp API Gateway để tương tác REST bên ngoài  
-- Xác thực & ủy quyền dựa trên **OIDC** thông qua **Amazon Cognito**  
-- Cơ chế *deduplication* tự quản lý bằng DynamoDB thay vì SNS FIFO vì:
-  1. SNS deduplication TTL chỉ 5 phút
-  2. SNS FIFO yêu cầu SQS FIFO
-  3. Chủ động báo cho sender biết message là bản sao
-
----
-
-## Staging ER7 microservice
-
-- Lambda “trigger” đăng ký với pub/sub hub, lọc message theo attribute  
-- Step Functions Express Workflow để chuyển ER7 → JSON  
-- Hai Lambda:
-  1. Sửa format ER7 (newline, carriage return)
-  2. Parsing logic  
-- Kết quả hoặc lỗi được đẩy lại vào pub/sub hub
-
----
-
-## Tính năng mới trong giải pháp
-
-### 1. AWS CloudFormation cross-stack references
-Ví dụ *outputs* trong core microservice:
-```yaml
-Outputs:
-  Bucket:
-    Value: !Ref Bucket
-    Export:
-      Name: !Sub ${AWS::StackName}-Bucket
-  ArtifactBucket:
-    Value: !Ref ArtifactBucket
-    Export:
-      Name: !Sub ${AWS::StackName}-ArtifactBucket
-  Topic:
-    Value: !Ref Topic
-    Export:
-      Name: !Sub ${AWS::StackName}-Topic
-  Catalog:
-    Value: !Ref Catalog
-    Export:
-      Name: !Sub ${AWS::StackName}-Catalog
-  CatalogArn:
-    Value: !GetAtt Catalog.Arn
-    Export:
-      Name: !Sub ${AWS::StackName}-CatalogArn
-
-
+Hiện đại hóa mã SAP cũ của bạn ngay hôm nay. Truy cập [Workshop] này để xem hướng dẫn từng bước về cách thiết lập Amazon Q Developer. Để tìm hiểu thêm, hãy xem [tài liệu] của chúng tôi hoặc liên hệ với đội ngũ của chúng tôi.

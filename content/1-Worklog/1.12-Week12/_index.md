@@ -1,59 +1,47 @@
 ﻿---
-title: "Week 12 Worklog"
+title: "Worklog Week 12"
 date: "2024-01-15"
 weight: 2
 chapter: false
-pre: " <b> 1.12. </b> "
+pre: " <b> 1.12 </b> "
 ---
-{{% notice warning %}} 
-⚠️ **Note:** The following information is for reference purposes only. Please **do not copy verbatim** for your own report, including this warning.
-{{% /notice %}}
 
+### Week 12 Goals:
 
-### Week 12 Objectives:
+- **Frontend Finalization:** Build and integrate completed backend features into the **ReactJS** interface.
+- **Cloud Deployment (AWS):** Apply AWS services to deploy the application, ensuring scalability and performance:
+  - Deploy **Frontend** to AWS (S3, CloudFront/Route 53).
+  - Deploy **Backend** using containers (Docker, ECR, ECS).
+  - Set up managed **Database** (RDS).
 
-* Connect and get acquainted with members of First Cloud Journey.
-* Understand basic AWS services, how to use the console & CLI.
+---
 
-### Tasks to be carried out this week:
-| Day | Task                                                                                                                                                                                                   | Start Date | Completion Date | Reference Material                        |
-| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- | --------------- | ----------------------------------------- |
-| 2   | - Get acquainted with FCJ members <br> - Read and take note of internship unit rules and regulations                                                                                                   | 08/11/2025 | 08/11/2025      |
-| 3   | - Learn about AWS and its types of services <br>&emsp; + Compute <br>&emsp; + Storage <br>&emsp; + Networking <br>&emsp; + Database <br>&emsp; + ... <br>                                              | 08/12/2025 | 08/12/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 4   | - Create AWS Free Tier account <br> - Learn about AWS Console & AWS CLI <br> - **Practice:** <br>&emsp; + Create AWS account <br>&emsp; + Install & configure AWS CLI <br> &emsp; + How to use AWS CLI | 08/13/2025 | 08/13/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 5   | - Learn basic EC2: <br>&emsp; + Instance types <br>&emsp; + AMI <br>&emsp; + EBS <br>&emsp; + ... <br> - SSH connection methods to EC2 <br> - Learn about Elastic IP   <br>                            | 08/14/2025 | 08/15/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 6   | - **Practice:** <br>&emsp; + Launch an EC2 instance <br>&emsp; + Connect via SSH <br>&emsp; + Attach an EBS volume                                                                                     | 08/15/2025 | 08/15/2025      | <https://cloudjourney.awsstudygroup.com/> |
+### Tasks to be Implemented This Week:
 
+| Day       | Task                                                                                                                                                                                                                                                                                                    | Start Date | Completion Date | Reference |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | --------------- | --------- |
+| Mon - Tue | **Frontend Integration (ReactJS):** <br> - Connect completed APIs (Service/Controller) (e.g., login, registration, fetching personal info, fetching posts) to the scaffolded **ReactJS** pages. <br> - Build the complete **Home/Feed** interface, displaying posts and **Like/Comment** functionality. | 17/11/2025 | 18/11/2025      |           |
+| Wed       | **Database Deployment (AWS RDS):** <br> - Set up the **AWS RDS** service (e.g., PostgreSQL/MySQL) and configure it to replace the local database. <br> - Update the Connection String in the Backend to point to **RDS**.                                                                               |
 
-### Week 12 Achievements:
+[Image of AWS RDS database architecture]
+| 19/11/2025 | 19/11/2025 | |
+| Thu | **Containerization (Docker & ECR):** <br> - Create the **Dockerfile** for the Backend application. <br> - Build the **Docker Image** and push it to **AWS ECR** (Elastic Container Registry) in preparation for deployment.
 
-* Understood what AWS is and mastered the basic service groups: 
-  * Compute
-  * Storage
-  * Networking 
-  * Database
-  * ...
+[Image of Docker containerization workflow]
+| 20/11/2025 | 20/11/2025 | |
+| Fri | **Backend Deployment (AWS ECS):** <br> - Configure and deploy the **AWS ECS** (Elastic Container Service) to run the Backend Docker Image from ECR. <br> - Set up **Load Balancer** and **Security Group** for ECS.
 
-* Successfully created and configured an AWS Free Tier account.
+[Image of AWS ECS deployment architecture]
+| 21/11/2025 | 21/11/2025 | |
+| Sat - Sun | **Frontend Deployment (S3, CloudFront & Route 53):** <br> - Build the ReactJS application and upload it to **AWS S3** (Web Hosting). <br> - Set up **AWS CloudFront** (CDN) to distribute static content and improve access speed. <br> - Configure **AWS Route 53** to point the domain name to CloudFront. | 22/11/2025 | 23/11/2025 | |
 
-* Became familiar with the AWS Management Console and learned how to find, access, and use services via the web interface.
+---
 
-* Installed and configured AWS CLI on the computer, including:
-  * Access Key
-  * Secret Key
-  * Default Region
-  * ...
+### Week 12 Achieved Results:
 
-* Used AWS CLI to perform basic operations such as:
-
-  * Check account & configuration information
-  * Retrieve the list of regions
-  * View EC2 service
-  * Create and manage key pairs
-  * Check information about running services
-  * ...
-
-* Acquired the ability to connect between the web interface and CLI to manage AWS resources in parallel.
-* ...
-
-
+- **Completed Frontend:** Successfully integrated basic **CRUD** and interactive features (Like, Comment, Chat) into the **ReactJS/Bootstrap** interface.
+- **Containerized Backend:** The Backend application is packaged with **Docker** and ready for deployment in a container environment.
+- **AWS Deployment:**
+  - Database has been migrated to **AWS RDS**.
+  - Backend has been deployed to **AWS ECS**.
+  - Frontend has been deployed to **AWS S3/CloudFront** and configured with **Route 53**.

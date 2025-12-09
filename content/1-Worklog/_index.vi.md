@@ -30,4 +30,4 @@ Thông thường và cũng là tiêu chuẩn, một worklog được thực hi�
 
 **Tuần 11:** [Hoàn thiện các chức năng còn xót lại, thực hiện reactjs để làm frontend](1.11-week11/)
 
-**Tuần 12:** [Làm công việc N...](1.12-week12/)
+**Tuần 12:** [Tích hợp ReactJS và Triển khai toàn bộ hệ thống lên AWS (ECS, S3, RDS)](1.12-week12/)

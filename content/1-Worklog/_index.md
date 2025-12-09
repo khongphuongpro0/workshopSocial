@@ -30,4 +30,4 @@ Typically, and also as standard, a worklog is maintained over about 3 months (th
 
 **Week 11:** [Finalizing remaining features, implementing ReactJS for the frontend](1.11-week11/)
 
-**Week 12:** [Working on task N...](1.12-week12/)
+**Week 12:** [ReactJS Integration and Full System Deployment to AWS (ECS, S3, RDS)](1.12-week12/)

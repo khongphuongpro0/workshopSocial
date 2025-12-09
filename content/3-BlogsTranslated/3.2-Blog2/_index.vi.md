@@ -1,129 +1,195 @@
 ﻿---
-title: "Blog 2"
-date: "2024-01-15"
+title: "Blog 2.Xây dựng kết nối mạng Hybrid đạt tiêu chuẩn cho doanh nghiệp trên AWS cho SAP Cloud ERP Private"
+date: "2025-06-30"
 weight: 1
 chapter: false
 pre: " <b> 3.2. </b> "
+categories:
+  [
+    "AWS Direct Connect",
+    "AWS Site-to-Site VPN",
+    "AWS Transit Gateway",
+    "Best Practices",
+    "SAP on AWS",
+  ]
+authors: ["Zachary Daniels"]
 ---
 
-{{% notice warning %}}
-⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
-{{% /notice %}}
+## Giới thiệu
 
-# Bắt đầu với healthcare data lakes: Sử dụng microservices
+Bạn đã sẵn sàng khai phá toàn bộ tiềm năng của khối lượng công việc SAP trên AWS chưa? Hãy cùng giải quyết một trong những mảnh ghép quan trọng nhất: thiết lập khả năng kết nối mạng an toàn, đáng tin cậy giữa mạng công ty của bạn và các khối lượng công việc ERP trên cloud.
 
-Các data lake có thể giúp các bệnh viện và cơ sở y tế chuyển dữ liệu thành những thông tin chi tiết về doanh nghiệp và duy trì hoạt động kinh doanh liên tục, đồng thời bảo vệ quyền riêng tư của bệnh nhân. **Data lake** là một kho lưu trữ tập trung, được quản lý và bảo mật để lưu trữ tất cả dữ liệu của bạn, cả ở dạng ban đầu và đã xử lý để phân tích. data lake cho phép bạn chia nhỏ các kho chứa dữ liệu và kết hợp các loại phân tích khác nhau để có được thông tin chi tiết và đưa ra các quyết định kinh doanh tốt hơn.
+Tại AWS, khi hỗ trợ khách hàng triển khai **SAP Cloud ERP Private** (trước đây gọi là RISE with SAP), ba câu hỏi phổ biến luôn xuất hiện:
 
-Bài đăng trên blog này là một phần của loạt bài lớn hơn về việc bắt đầu cài đặt data lake dành cho lĩnh vực y tế. Trong bài đăng blog cuối cùng của tôi trong loạt bài, *“Bắt đầu với data lake dành cho lĩnh vực y tế: Đào sâu vào Amazon Cognito”*, tôi tập trung vào các chi tiết cụ thể của việc sử dụng Amazon Cognito và Attribute Based Access Control (ABAC) để xác thực và ủy quyền người dùng trong giải pháp data lake y tế. Trong blog này, tôi trình bày chi tiết cách giải pháp đã phát triển ở cấp độ cơ bản, bao gồm các quyết định thiết kế mà tôi đã đưa ra và các tính năng bổ sung được sử dụng. Bạn có thể truy cập các code samples cho giải pháp tại Git repo này để tham khảo.
+1.  “Làm sao để thiết lập kết nối an toàn với môi trường private cloud ERP?”
+2.  “Kiến trúc mạng nào tiết kiệm chi phí nhất cho trường hợp của chúng tôi?”
+3.  “Nên triển khai **Direct Connect, Site-to-Site VPN**, hay cả hai?”
 
----
-
-## Hướng dẫn kiến trúc
-
-Thay đổi chính kể từ lần trình bày cuối cùng của kiến trúc tổng thể là việc tách dịch vụ đơn lẻ thành một tập hợp các dịch vụ nhỏ để cải thiện khả năng bảo trì và tính linh hoạt. Việc tích hợp một lượng lớn dữ liệu y tế khác nhau thường yêu cầu các trình kết nối chuyên biệt cho từng định dạng; bằng cách giữ chúng được đóng gói riêng biệt với microservices, chúng ta có thể thêm, xóa và sửa đổi từng trình kết nối mà không ảnh hưởng đến những kết nối khác. Các microservices được kết nối rời thông qua tin nhắn publish/subscribe tập trung trong cái mà tôi gọi là “pub/sub hub”.
-
-Giải pháp này đại diện cho những gì tôi sẽ coi là một lần lặp nước rút hợp lý khác từ last post của tôi. Phạm vi vẫn được giới hạn trong việc nhập và phân tích cú pháp đơn giản của các **HL7v2 messages** được định dạng theo **Quy tắc mã hóa 7 (ER7)** thông qua giao diện REST.
-
-**Kiến trúc giải pháp bây giờ như sau:**
-
-> *Hình 1. Kiến trúc tổng thể; những ô màu thể hiện những dịch vụ riêng biệt.*
-
----
-
-Mặc dù thuật ngữ *microservices* có một số sự mơ hồ cố hữu, một số đặc điểm là chung:  
-- Chúng nhỏ, tự chủ, kết hợp rời rạc  
-- Có thể tái sử dụng, giao tiếp thông qua giao diện được xác định rõ  
-- Chuyên biệt để giải quyết một việc  
-- Thường được triển khai trong **event-driven architecture**
-
-Khi xác định vị trí tạo ranh giới giữa các microservices, cần cân nhắc:  
-- **Nội tại**: công nghệ được sử dụng, hiệu suất, độ tin cậy, khả năng mở rộng  
-- **Bên ngoài**: chức năng phụ thuộc, tần suất thay đổi, khả năng tái sử dụng  
-- **Con người**: quyền sở hữu nhóm, quản lý *cognitive load*
+Quyết định về kết nối mạng hôm nay sẽ ảnh hưởng đến hoạt động SAP của bạn trong nhiều năm tới, từ hiệu năng hệ thống cho đến khả năng khôi phục sau thảm họa. Trong hướng dẫn này, chúng tôi sẽ giúp bạn đơn giản hóa vấn đề và chỉ ra cách kết nối hạ tầng hiện có của bạn với AWS cho SAP Cloud ERP Private.
 
 ---
 
-## Lựa chọn công nghệ và phạm vi giao tiếp
+## Bắt đầu: Hiểu mô hình Trách nhiệm chia sẻ
 
-| Phạm vi giao tiếp                        | Các công nghệ / mô hình cần xem xét                                                        |
-| ---------------------------------------- | ------------------------------------------------------------------------------------------ |
-| Trong một microservice                   | Amazon Simple Queue Service (Amazon SQS), AWS Step Functions                               |
-| Giữa các microservices trong một dịch vụ | AWS CloudFormation cross-stack references, Amazon Simple Notification Service (Amazon SNS) |
-| Giữa các dịch vụ                         | Amazon EventBridge, AWS Cloud Map, Amazon API Gateway                                      |
+Khi triển khai các khối lượng công việc cho SAP Cloud ERP Private, trách nhiệm được chia rõ ràng như sau:
 
----
+- **SAP** chịu trách nhiệm quản lý môi trường AWS nơi Cloud ERP Private hoạt động.
+- **Bạn** chịu trách nhiệm về **kết nối mạng** giữa hạ tầng của mình và môi trường SAP Cloud ERP Private trong AWS.
 
-## The pub/sub hub
-
-Việc sử dụng kiến trúc **hub-and-spoke** (hay message broker) hoạt động tốt với một số lượng nhỏ các microservices liên quan chặt chẽ.  
-- Mỗi microservice chỉ phụ thuộc vào *hub*  
-- Kết nối giữa các microservice chỉ giới hạn ở nội dung của message được xuất  
-- Giảm số lượng synchronous calls vì pub/sub là *push* không đồng bộ một chiều
-
-Nhược điểm: cần **phối hợp và giám sát** để tránh microservice xử lý nhầm message.
+Điều này có nghĩa là bạn cần có chiến lược kết nối rõ ràng trước khi bắt đầu triển khai.
 
 ---
 
-## Core microservice
+## Xác định nhu cầu kinh doanh của bạn
 
-Cung cấp dữ liệu nền tảng và lớp truyền thông, gồm:  
-- **Amazon S3** bucket cho dữ liệu  
-- **Amazon DynamoDB** cho danh mục dữ liệu  
-- **AWS Lambda** để ghi message vào data lake và danh mục  
-- **Amazon SNS** topic làm *hub*  
-- **Amazon S3** bucket cho artifacts như mã Lambda
+Thông thường, có ba điểm xuất phát chính khi triển khai SAP Cloud ERP Private:
 
-> Chỉ cho phép truy cập ghi gián tiếp vào data lake qua hàm Lambda → đảm bảo nhất quán.
+1.  **Triển khai tập trung:** Ưu tiên sự đơn giản, cần giải pháp mạng đơn giản, an toàn để nhanh chóng bắt đầu kết nối.
+2.  **Hạ tầng AWS sẵn có:** Bạn đã có kết nối AWS và muốn tích hợp SAP Cloud ERP Private vào kiến trúc mạng hiện tại.
+3.  **Vận hành đa vùng:** Cần khả năng kết nối phức tạp, đa vùng, có khả năng kiểm soát và tự động hóa cao.
 
----
-
-## Front door microservice
-
-- Cung cấp API Gateway để tương tác REST bên ngoài  
-- Xác thực & ủy quyền dựa trên **OIDC** thông qua **Amazon Cognito**  
-- Cơ chế *deduplication* tự quản lý bằng DynamoDB thay vì SNS FIFO vì:
-  1. SNS deduplication TTL chỉ 5 phút
-  2. SNS FIFO yêu cầu SQS FIFO
-  3. Chủ động báo cho sender biết message là bản sao
+Cả ba cách đều đảm bảo bảo mật và độ tin cậy. Sự khác biệt chính nằm ở cách cân bằng giữa nhu cầu hiện tại, độ phức tạp vận hành, và khả năng mở rộng trong tương lai.
 
 ---
 
-## Staging ER7 microservice
+## Nội dung bài viết này
 
-- Lambda “trigger” đăng ký với pub/sub hub, lọc message theo attribute  
-- Step Functions Express Workflow để chuyển ER7 → JSON  
-- Hai Lambda:
-  1. Sửa format ER7 (newline, carriage return)
-  2. Parsing logic  
-- Kết quả hoặc lỗi được đẩy lại vào pub/sub hub
+Chúng ta sẽ đi qua ba kiến trúc kết nối phù hợp với từng yêu cầu kinh doanh khác nhau:
+
+1.  **Kiến trúc nền tảng:** Giải pháp kết nối tinh gọn, an toàn, dễ triển khai (cho doanh nghiệp cần triển khai nhanh).
+2.  **Kiến trúc tích hợp:** Mô hình kết nối hybrid, tối ưu hóa tận dụng các hạ tầng AWS hiện có và cung cấp khả năng tự động chuyển đổi dự phòng.
+3.  **Kiến trúc toàn diện:** Kiến trúc quy mô doanh nghiệp mang lại tính linh hoạt tối đa cho các triển khai phức tạp, đa vùng, kết hợp các phương pháp hay nhất của AWS (**AWS Landing Zone**).
 
 ---
 
-## Tính năng mới trong giải pháp
+## Option 1: Xây dựng kết nối quan trọng với AWS Direct Connect
 
-### 1. AWS CloudFormation cross-stack references
-Ví dụ *outputs* trong core microservice:
-```yaml
-Outputs:
-  Bucket:
-    Value: !Ref Bucket
-    Export:
-      Name: !Sub ${AWS::StackName}-Bucket
-  ArtifactBucket:
-    Value: !Ref ArtifactBucket
-    Export:
-      Name: !Sub ${AWS::StackName}-ArtifactBucket
-  Topic:
-    Value: !Ref Topic
-    Export:
-      Name: !Sub ${AWS::StackName}-Topic
-  Catalog:
-    Value: !Ref Catalog
-    Export:
-      Name: !Sub ${AWS::StackName}-Catalog
-  CatalogArn:
-    Value: !GetAtt Catalog.Arn
-    Export:
-      Name: !Sub ${AWS::StackName}-CatalogArn
+Khi khối lượng công việc SAP của bạn đòi hỏi hiệu năng ổn định và độ trễ thấp, **AWS Direct Connect (DX)** là lựa chọn tối ưu. Giải pháp này cung cấp đường truyền mạng riêng, chuyên dụng giữa hạ tầng của bạn và SAP Cloud ERP Private trên AWS.
 
+![Cấu hình Direct Connect có khả năng chịu lỗi giữa mạng của khách hàng và môi trường SAP Cloud ERP Private trên AWS](./images/blog2_1.png)
 
+### Tại sao nên chọn Direct Connect?
+
+Đối với môi trường SAP quan trọng, DX mang lại:
+
+- Hiệu năng ổn định, độ trễ thấp.
+- Hành vi mạng có thể dự đoán được.
+- Băng thông chuyên dụng.
+- Bảo mật tăng cường nhờ kết nối riêng.
+
+### Nên sử dụng DX khi:
+
+- Môi trường SAP production yêu cầu độ trễ thấp, hiệu năng ổn định.
+- Có lưu lượng truyền dữ liệu lớn (trên 2TB/ngày).
+- Cần thời gian phản hồi có thể dự đoán cho các tác vụ quan trọng.
+
+### Các loại kết nối Direct Connect:
+
+1.  **Hosted Connections:** Triển khai nhanh thông qua AWS Direct Connect Partners. Phù hợp cho hầu hết các triển khai SAP Cloud ERP Private.
+2.  **Dedicated Connections:** Toàn quyền kiểm soát kết nối, hỗ trợ băng thông tùy chỉnh lên đến 100 Gbps. Dành cho workload lớn, nhạy cảm với độ trễ.
+
+**Lưu ý bảo mật:** Cả hai loại kết nối đều không bao gồm mã hóa sẵn. Hãy cân nhắc triển khai **MacSec** để tăng cường bảo mật.
+
+### Xây dựng kết nối có khả năng chịu lỗi (Resilient Connectivity):
+
+Đối với các công việc quan trọng, nên triển khai nhiều kết nối DX để đạt được tính khả dụng cao.
+
+- Sử dụng **AWS Direct Connect Resiliency Recommendations** để chọn mô hình tối ưu.
+- Dùng **Direct Connect Resiliency Toolkit** để tạo kết nối dự phòng.
+
+---
+
+## Option 2: Tối ưu chi phí và độ tin cậy với Direct Connect + VPN Failover
+
+Bằng cách kết hợp AWS Direct Connect với **Site-to-Site VPN**, bạn có thể xây dựng kiến trúc mạng hybrid có khả năng chịu lỗi cao, đồng thời cân bằng giữa hiệu năng và chi phí.
+
+![AWS Direct Connect chính kết hợp với Site-to-Site VPN dự phòng giữa mạng khách hàng và SAP Cloud ERP Private](./images/blog2_2.png)
+
+### Xây dựng chiến lược kết nối hybrid của bạn
+
+- **Direct Connect** là đường truyền chính (hiệu năng ổn định).
+- **AWS Site-to-Site VPN** đóng vai trò dự phòng tự động, cung cấp kết nối được mã hóa qua Internet nếu kết nối chính bị gián đoạn.
+
+Cách tiếp cận này giúp bạn duy trì độ tin cậy cao mà không cần chi phí cho nhiều đường Direct Connect dư thừa.
+
+### Bắt đầu với Site-to-Site VPN
+
+Ưu điểm nổi bật là triển khai cực nhanh (chỉ trong vài ngày), cho phép đội ngũ của bạn bắt đầu làm việc với SAP Cloud ERP Private ngay lập tức.
+
+Kết nối VPN mang lại:
+
+- Mã hóa **IPSec** tích hợp sẵn để truyền dữ liệu an toàn.
+- Băng thông linh hoạt, dựa vào đường Internet.
+- Mô hình tính phí theo mức sử dụng (**pay-as-you-go**).
+
+### Chọn lựa phù hợp cho doanh nghiệp của bạn
+
+Mô hình hybrid này đặc biệt phù hợp với các tổ chức cần:
+
+- Cân bằng giữa hiệu năng và ngân sách.
+- Hỗ trợ văn phòng chi nhánh hoặc vùng có băng thông khác nhau.
+- Thiết lập khả năng khôi phục sau thảm họa.
+
+---
+
+## Option 3: Xây dựng nền tảng doanh nghiệp với AWS Landing Zone
+
+Khi SAP Cloud ERP Private là một phần trong chiến lược cloud tổng thể, việc triển khai **AWS Landing Zone** sẽ tạo ra một nền tảng có thể phát triển cùng doanh nghiệp.
+
+![AWS Landing Zone quản lý tập trung kết nối giữa mạng on-premises và SAP Cloud ERP Private](../images/blog2_3.png)
+
+### Vì sao nên cân nhắc phương pháp Landing Zone?
+
+Landing Zone là một môi trường AWS đa tài khoản được thiết kế tốt và tuân theo các phương pháp hay nhất. Nó cung cấp:
+
+- Kiểm soát và giám sát bảo mật tập trung.
+- Kiến trúc mạng tiêu chuẩn hóa.
+- Quản trị nhất quán trên nhiều vùng.
+- Tùy chọn tích hợp linh hoạt.
+
+**Landing Zone Accelerator (LZA)** là công cụ giúp triển khai nền tảng này một cách nhanh chóng và an toàn.
+
+### Tạo môi trường kết nối của bạn
+
+Bên trong Landing Zone, **AWS Transit Gateway** đóng vai trò là trung tâm điều phối lưu lượng mạng. Thiết kế này cho phép bạn:
+
+- Kết nối nhiều VPC.
+- Tích hợp các mạng on-premises.
+- Triển khai các chính sách bảo mật thống nhất.
+- Giám sát lưu lượng mạng tập trung.
+- Mở rộng kết nối khi cần thiết.
+
+### Ứng dụng thực tế
+
+Các tổ chức triển khai cách tiếp cận Landing Zone khi họ:
+
+- Cần duy trì các tiêu chuẩn bảo mật và tuân thủ nghiêm ngặt.
+- Có kế hoạch mở rộng vượt ra ngoài các khối lượng công việc SAP cốt lõi (ví dụ: bổ sung IoT, phân tích dữ liệu, machine learning).
+- Hoạt động trên nhiều khu vực địa lý.
+
+---
+
+## Tổng hợp lại: Xây dựng chiến lược mạng tối ưu của bạn
+
+Các tùy chọn kết nối có thể kết hợp với nhau để tạo ra giải pháp toàn diện:
+
+| Kết hợp                                    | Lợi ích Chính                                                                      | Phù hợp cho                                        |
+| :----------------------------------------- | :--------------------------------------------------------------------------------- | :------------------------------------------------- |
+| **DX + VPN** (Tùy chọn 1 + 2)              | Hiệu năng ổn định, khả năng chịu lỗi tích hợp sẵn, tối ưu chi phí.                 | Workload quan trọng, vị trí từ xa, cần dự phòng.   |
+| **Landing Zone + DX** (Tùy chọn 3 + 1)     | Kiểm soát tối đa, mức độ sẵn sàng cao nhất, tiêu chuẩn bảo mật cấp doanh nghiệp.   | Kiểm soát tối đa, nền tảng sẵn sàng cho tương lai. |
+| **Landing Zone + Hybrid** (Tùy chọn 3 + 2) | Kiến trúc có thể mở rộng, quản lý chi phí thông minh, chuyển đổi dự phòng tự động. | Tính linh hoạt, tối ưu chi phí, quản lý đơn giản.  |
+| **Toàn diện** (Tùy chọn 1 + 2 + 3)         | Tối đa hóa tính linh hoạt, dự phòng hoàn toàn, phạm vi toàn cầu.                   | Doanh nghiệp lớn, yêu cầu cao nhất.                |
+
+### Thực hiện: Các bước tiếp theo của bạn
+
+1.  **Đánh giá yêu cầu của bạn:** Lập bản đồ các yêu cầu kết nối mạng, nhu cầu về hiệu năng, và khả năng mở rộng trong tương lai.
+2.  **Lên kế hoạch cho phương pháp tiếp cận:** Chọn chiến lược kết nối phù hợp, xác định các giai đoạn triển khai và thiết lập mốc thời gian thực hiện.
+3.  **Chuẩn bị cho việc triển khai:** Tạo các yêu cầu kỹ thuật chi tiết, liên hệ với AWS sớm và phát triển các kế hoạch kiểm thử.
+
+---
+
+## Tài nguyên bổ sung:
+
+- Guidance for Building an Enterprise-Ready Network Foundation for RISE with SAP on AWS
+- AWS Direct Connect + AWS Transit Gateway + AWS Site-to-Site VPN
+- Connecting to RISE with SAP from on-premises networks

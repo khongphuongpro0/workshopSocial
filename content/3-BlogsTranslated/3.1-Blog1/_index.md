@@ -1,128 +1,125 @@
 ﻿---
-title: "Blog 1"
-date: "2024-01-15"
+title: "Blog 1.Extending SAP Field Service Management with AWS: A Clean Core Approach for Attachment Storage"
+date: "2025-07-07"
 weight: 1
 chapter: false
 pre: " <b> 3.1. </b> "
+categories: ["SAP on AWS", "Serverless"]
+authors: ["Francesco Bersani", "Otto Kruse", "Peter Daukintis"]
 ---
-{{% notice warning %}}
-⚠️ **Note:** The information below is for reference purposes only. Please **do not copy verbatim** for your report, including this warning.
-{{% /notice %}}
 
-# Getting Started with Healthcare Data Lakes: Using Microservices
-
-Data lakes can help hospitals and healthcare facilities turn data into business insights, maintain business continuity, and protect patient privacy. A **data lake** is a centralized, managed, and secure repository to store all your data, both in its raw and processed forms for analysis. Data lakes allow you to break down data silos and combine different types of analytics to gain insights and make better business decisions.
-
-This blog post is part of a larger series on getting started with setting up a healthcare data lake. In my final post of the series, *“Getting Started with Healthcare Data Lakes: Diving into Amazon Cognito”*, I focused on the specifics of using Amazon Cognito and Attribute Based Access Control (ABAC) to authenticate and authorize users in the healthcare data lake solution. In this blog, I detail how the solution evolved at a foundational level, including the design decisions I made and the additional features used. You can access the code samples for the solution in this Git repo for reference.
+Digital transformation in field service operations has led to an exponential increase in assets generation and therefore storage requirements. Organizations using **SAP Field Service Management (SAP FSM)** face growing challenges in managing digital assets captured by field service technicians. These assets can consist of equipment pictures, forms, customer signatures and other critical assets managed when in the field. This post demonstrates how to leverage **Amazon Web Services (AWS)** to create a scalable, cost-effective attachment storage solution for SAP FSM while adhering to **SAP Clean Core Extensibility** principle.
 
 ---
 
-## Architecture Guidance
+## Overview
 
-The main change since the last presentation of the overall architecture is the decomposition of a single service into a set of smaller services to improve maintainability and flexibility. Integrating a large volume of diverse healthcare data often requires specialized connectors for each format; by keeping them encapsulated separately as microservices, we can add, remove, and modify each connector without affecting the others. The microservices are loosely coupled via publish/subscribe messaging centered in what I call the “pub/sub hub.”
+Field service operations generate substantial amounts of attachments throughout their daily activities. While SAP FSM provides native storage capabilities, organizations often require more storage space and a more flexible and cost-effective solutions that allow them to maintain data ownership for compliance reasons while enabling integration with other business processes. By integrating SAP FSM with an organization’s AWS infrastructure, this solution empowers enterprises to maintain control over their data, while also enabling advanced processing and analysis to extract maximum value from the assets created in the field.
 
-This solution represents what I would consider another reasonable sprint iteration from my last post. The scope is still limited to the ingestion and basic parsing of **HL7v2 messages** formatted in **Encoding Rules 7 (ER7)** through a REST interface.
-
-**The solution architecture is now as follows:**
-
-> *Figure 1. Overall architecture; colored boxes represent distinct services.*
+The integration proposed in this blog allows organizations to store the attachments generated in SAP FSM in an **Amazon Simple Storage Service (S3) bucket** in one of their own AWS Accounts, enforcing data ownership and reducing the data footprint in SAP FSM. In addition, an organization can implement additional data processing and analysis on the stored attachments by leveraging AWS services such as **Amazon Textract** for text extraction, **Amazon Rekognition** for image analysis, or **Amazon Comprehend** for natural language processing. Having the full control of these assets is also the starting point to power more complex solution by leveraging **Large Language Models (LLMs)** and **Knowledge Base** integrations.
 
 ---
 
-While the term *microservices* has some inherent ambiguity, certain traits are common:  
-- Small, autonomous, loosely coupled  
-- Reusable, communicating through well-defined interfaces  
-- Specialized to do one thing well  
-- Often implemented in an **event-driven architecture**
+## How it works
 
-When determining where to draw boundaries between microservices, consider:  
-- **Intrinsic**: technology used, performance, reliability, scalability  
-- **Extrinsic**: dependent functionality, rate of change, reusability  
-- **Human**: team ownership, managing *cognitive load*
+The process begins in the field, where a service technician completes their work at a customer site. Using their mobile device with the **SAP FSM application**, they capture crucial documents. When they tap “upload” in their FSM application, they set in motion a chain of events designed to ensure the documents are stored, safely accessible within the organization.
 
----
+![How it works: High-level data flow from SAP FSM to AWS S3](./images/blog1_1.png)
 
-## Technology Choices and Communication Scope
+As the attachment lands in SAP FSM, the system’s business rule engine immediately detects this new content. The engine, configured with specific rules for attachment handling, springs into action. The business rule extracts essential information about the attachment (unique identifier, filename, description, timestamp, and relationship to the service call).
 
-| Communication scope                       | Technologies / patterns to consider                                                        |
-| ----------------------------------------- | ------------------------------------------------------------------------------------------ |
-| Within a single microservice              | Amazon Simple Queue Service (Amazon SQS), AWS Step Functions                               |
-| Between microservices in a single service | AWS CloudFormation cross-stack references, Amazon Simple Notification Service (Amazon SNS) |
-| Between services                          | Amazon EventBridge, AWS Cloud Map, Amazon API Gateway                                      |
+The business rule then makes an **HTTPS request** with the attachment’s **metadata** to a dedicated **API endpoint** in the customer’s AWS environment. This API, built on **Amazon API Gateway**, is protected with a unique API key for the SAP FSM tenant, and **IP allowlisted** to the SAP FSM environment.
 
----
+Upon receiving the metadata, the API publishes it to **Amazon EventBridge (EventBridge)**. The handling of this event happens asynchronously by an **AWS Lambda (Lambda)** function – the attachment processor. This function performs several critical tasks in sequence:
 
-## The Pub/Sub Hub
+1.  It authenticates with SAP FSM using **OAuth2 credentials** stored in **AWS Secrets Manager**.
+2.  It retrieves the actual attachment content using SAP FSM’s attachment API.
+3.  It processes this content, enriches it with the original metadata, and stores everything in a designated **S3 bucket**.
 
-Using a **hub-and-spoke** architecture (or message broker) works well with a small number of tightly related microservices.  
-- Each microservice depends only on the *hub*  
-- Inter-microservice connections are limited to the contents of the published message  
-- Reduces the number of synchronous calls since pub/sub is a one-way asynchronous *push*
+Here the detailed architecture diagram:
 
-Drawback: **coordination and monitoring** are needed to avoid microservices processing the wrong message.
+![Detailed Reference Architecture of SAP FSM and AWS Integration](./images/blog1_2.png)
 
 ---
 
-## Core Microservice
+## SAP FSM Extension
 
-Provides foundational data and communication layer, including:  
-- **Amazon S3** bucket for data  
-- **Amazon DynamoDB** for data catalog  
-- **AWS Lambda** to write messages into the data lake and catalog  
-- **Amazon SNS** topic as the *hub*  
-- **Amazon S3** bucket for artifacts such as Lambda code
+The solution allows FSM customers to view operational metrics about the Amazon S3 back-ups of the attachments, and can be installed as an **SAP FSM extension**.
 
-> Only allow indirect write access to the data lake through a Lambda function → ensures consistency.
+The extension is a web page, built with **React**, and hosted on **Amazon CloudFront** and **Amazon S3**. The extension provides real-time visibility into your S3 storage metrics via a built-in **Amazon CloudWatch** dashboard.
 
----
+### Extension Authentication
 
-## Front Door Microservice
+Because the extension runs inside user’s browsers (as an **HTML iframe**), it uses a new authentication pattern:
 
-- Provides an API Gateway for external REST interaction  
-- Authentication & authorization based on **OIDC** via **Amazon Cognito**  
-- Self-managed *deduplication* mechanism using DynamoDB instead of SNS FIFO because:  
-  1. SNS deduplication TTL is only 5 minutes  
-  2. SNS FIFO requires SQS FIFO  
-  3. Ability to proactively notify the sender that the message is a duplicate  
+1.  The extension uses the **SAP FSM SDK** to acquire a **short-lived token (JWT)** for the user, which is cryptographically signed by SAP FSM.
+2.  The token is then used to authorize requests from the extension to **AWS API Gateway**.
+3.  The solution includes a **Lambda Custom Authorizer** that uses the library `aws-jwt-verify` to verify the token, checking the tenant details and the cryptographic signature.
 
 ---
 
-## Staging ER7 Microservice
+## Getting Started
 
-- Lambda “trigger” subscribed to the pub/sub hub, filtering messages by attribute  
-- Step Functions Express Workflow to convert ER7 → JSON  
-- Two Lambdas:  
-  1. Fix ER7 formatting (newline, carriage return)  
-  2. Parsing logic  
-- Result or error is pushed back into the pub/sub hub  
+The high level steps of the implementation includes:
+
+1.  Review the prerequisites and ensure you have the necessary AWS and SAP FSM access.
+2.  Deploy the solution using the provided **CloudFormation templates** in your region.
+3.  Configure the **OAuth2 credentials** in SAP FSM.
+4.  Install and configure the extension in SAP FSM Extension marketplace.
+5.  Monitor the implementation through the provided **CloudWatch dashboard**.
 
 ---
 
-## New Features in the Solution
+## Cost Overview
 
-### 1. AWS CloudFormation Cross-Stack References
-Example *outputs* in the core microservice:
-```yaml
-Outputs:
-  Bucket:
-    Value: !Ref Bucket
-    Export:
-      Name: !Sub ${AWS::StackName}-Bucket
-  ArtifactBucket:
-    Value: !Ref ArtifactBucket
-    Export:
-      Name: !Sub ${AWS::StackName}-ArtifactBucket
-  Topic:
-    Value: !Ref Topic
-    Export:
-      Name: !Sub ${AWS::StackName}-Topic
-  Catalog:
-    Value: !Ref Catalog
-    Export:
-      Name: !Sub ${AWS::StackName}-Catalog
-  CatalogArn:
-    Value: !GetAtt Catalog.Arn
-    Export:
-      Name: !Sub ${AWS::StackName}-CatalogArn
+The costs related to deploying and using the solution are mainly related to the volume of attachments created in FSM. For testing purposes, the costs are minimal, less than **$1 per month**.
 
+### Production Cost Assumptions
 
+| Assumption                                                | Value                    | Details    |
+| :-------------------------------------------------------- | :----------------------- | :--------- |
+| Number of attachments created in SAP FSM (FSM agent)      | 100,000                  | per Month  |
+| Volume of attachment (GB)                                 | 100                      | per Month  |
+| Number of http requests for Extension UI (FSM admin user) | 10,000                   | per Month  |
+| AWS Region                                                | eu-central-1 (Frankfurt) |            |
+| Currency                                                  | USD                      | US Dollars |
+
+(Table 1: Assumptions for cost calculation)
+
+### Cost Breakdown
+
+- **Total Monthly Cost:** **6.81 USD**
+- **Total Yearly Cost:** **81.72 USD**
+
+| Description                                                      | AWS Service        | Monthly (USD) | Year (USD) |
+| :--------------------------------------------------------------- | :----------------- | :------------ | :--------- |
+| Distribution                                                     | Amazon CloudFront  | 0.23          | 2.76       |
+| S3 Bucket (attachments)                                          | S3 Standard        | 3.04          | 36.48      |
+| REST API Gateway                                                 | Amazon API Gateway | 0.37          | 4.44       |
+| Metrics                                                          | Amazon CloudWatch  | 3.01          | 36.12      |
+| _Other Serverless services (Lambda, EventBridge, Data Transfer)_ | _AWS Serverless_   | _~0.16_       | _~1.92_    |
+
+(Table 2: Cost details summary)
+
+---
+
+## Conclusion
+
+The integration between SAP Field Service Management and AWS demonstrates how organizations can leverage **cloud-native serverless services** to build scalable, secure, and cost-effective solutions while maintaining a **clean core approach**.
+
+### Key Benefits:
+
+- **Reduced data footprint** in SAP FSM.
+- **Enhanced data sovereignty and control**.
+- **Cost-effective scalable storage** through S3.
+- **Built-in monitoring and observability**.
+- **Potential for advanced analytics and AI/ML integration**.
+- **Seamless user experience** for field technicians.
+
+The solution’s **serverless architecture** ensures minimal operational overhead.
+
+---
+
+## Join the SAP on AWS Discussion
+
+AWS provides public question and answer forums on our **re:Post Site**. Refer to the **AWS Serverless blog section** to learn more about serverless and event driven architecture patterns.

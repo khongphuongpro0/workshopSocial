@@ -1,34 +1,49 @@
 ﻿---
-title: "Workshop"
-date: "2024-01-15"
+title: "Workshop: Triển khai Ứng dụng Web Social Media trên AWS"
+date: 2025-12-09T10:00:00+07:00
 weight: 5
-chapter: false
-pre: " <b> 5. </b> "
+chapter: true
+pre: "<b>5.</b> "
 ---
 
-{{% notice warning %}}
-⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
-{{% /notice %}}
+# 🛠️ Workshop: Triển khai Ứng dụng Web Social Media trên AWS
 
+Workshop này cung cấp hướng dẫn chi tiết từng bước để triển khai một ứng dụng web Social Media (bao gồm Frontend và Backend) lên nền tảng **Amazon Web Services (AWS)**. Chúng ta sẽ xây dựng một kiến trúc hiện đại, bảo mật, và có khả năng mở rộng bằng cách sử dụng các dịch vụ Cloud như VPC, S3, CloudFront, RDS, ECR, ALB, và ECS Fargate.
 
-# Đảm bảo truy cập Hybrid an toàn đến S3 bằng cách sử dụng VPC endpoint
+## Mục tiêu chính
 
-#### Tổng quan
+- Thiết lập một môi trường mạng (VPC) bảo mật và sẵn sàng cao.
+- Triển khai Frontend tĩnh trên S3/CloudFront (sử dụng HTTPS và Route 53).
+- Đóng gói và triển khai Backend dưới dạng container trên ECS Fargate.
+- Sử dụng RDS cho tầng dữ liệu (Database).
 
-**AWS PrivateLink** cung cấp kết nối riêng tư đến các dịch vụ aws từ VPCs hoặc trung tâm dữ liệu (on-premise) mà không làm lộ lưu lượng truy cập ra ngoài public internet.
+## Các bước trong Workshop
 
-Trong bài lab này, chúng ta sẽ học cách tạo, cấu hình, và kiểm tra VPC endpoints để cho phép workload của bạn tiếp cận các dịch vụ AWS mà không cần đi qua Internet công cộng.
+### 5.1. Tổng quan Workshop
 
-Chúng ta sẽ tạo hai loại endpoints để truy cập đến Amazon S3: gateway vpc endpoint và interface vpc endpoint. Hai loại vpc endpoints này mang đến nhiều lợi ích tùy thuộc vào việc bạn truy cập đến S3 từ môi trường cloud hay từ trung tâm dữ liệu (on-premise).
-+ **Gateway** - Tạo gateway endpoint để gửi lưu lượng đến Amazon S3 hoặc DynamoDB using private IP addresses. Bạn điều hướng lưu lượng từ VPC của bạn đến gateway endpoint bằng các bảng định tuyến (route tables)
-+ **Interface** - Tạo interface endpoint để gửi lưu lượng đến các dịch vụ điểm cuối (endpoints) sử dụng Network Load Balancer để phân phối lưu lượng. Lưu lượng dành cho dịch vụ điểm cuối được resolved bằng DNS.
+Tổng quan về mục tiêu, kiến trúc và các kết quả mong đợi của Workshop.
 
-#### Nội dung
+### 5.2. Các Yêu cầu Tiên quyết
 
-1. [Tổng quan về workshop](5.1-Workshop-overview/)
-2. [Chuẩn bị](5.2-Prerequiste/)
-3. [Truy cập đến S3 từ VPC](5.3-S3-vpc/)
-4. [Truy cập đến S3 từ TTDL On-premises](5.4-S3-onprem/)
-5. [VPC Endpoint Policies (làm thêm)](5.5-Policy/)
-6. [Dọn dẹp tài nguyên](5.6-Cleanup/)
+Chuẩn bị các tài khoản AWS, công cụ (AWS CLI, Docker) và mã nguồn cần thiết trước khi bắt đầu.
 
+### 5.3. Thiết lập S3, CloudFront và VPC
+
+- **5.3.1. Tạo S3 cho Upload và Frontend:** Tạo các bucket S3 cho file upload và hosting Frontend, cấu hình IAM cho việc upload.
+- **5.3.2. Cấu hình CDN và Route 53:** Thiết lập CloudFront (CDN) để phục vụ Frontend qua HTTPS và cấu hình tên miền qua Route 53 và ACM.
+- **5.3.3. Thiết lập Mạng VPC:** Tạo VPC, Internet Gateway, và các Subnet (Public/Private) cần thiết.
+
+### 5.4. Cấu hình Mạng Nâng cao
+
+- **Tạo NAT Gateway và Route Table:** Thiết lập NAT Gateway để Private Subnet có thể truy cập Internet (ra ngoài) và cấu hình các Route Table tương ứng cho các loại Subnet.
+
+### 5.5. Thiết lập Database RDS
+
+- **Tạo DB Subnet Group và RDS:** Khởi tạo DB Subnet Group và Database MySQL/RDS trong Private Subnet.
+
+### 5.6. Triển khai Container và Load Balancing (Cleanup)
+
+- **Docker, ECR và Push Image:** Đóng gói Backend bằng Docker và đẩy image lên ECR.
+- **Security Group và ALB:** Tạo Security Group và thiết lập Application Load Balancer (ALB) để điều hướng traffic an toàn đến Backend.
+- **ECS Cluster và Service:** Cấu hình Task Definition, tạo ECS Cluster (Fargate) và ECS Service để triển khai Backend.
+- **Kết thúc:** Cấu hình Route 53 cuối cùng để trỏ tên miền API về ALB và kiểm tra kết quả.

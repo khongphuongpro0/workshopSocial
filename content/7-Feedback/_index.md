@@ -1,49 +1,54 @@
 ﻿---
-title: "Sharing and Feedback"
+title: "Feedback and Suggestions"
 date: "2024-01-15"
 weight: 7
 chapter: false
 pre: " <b> 7. </b> "
 ---
 
-{{% notice warning %}}
-⚠️ **Note:** The information below is for reference purposes only. Please **do not copy verbatim** for your report, including this warning.
-{{% /notice %}}
+> This section contains my personal feedback on the **First Cloud Journey (FCJ)** program. These comments are intended to help the FCJ Team and the company improve the experience for subsequent generations of interns.
 
-> Here, you can freely share your personal opinions about your experience participating in the First Cloud Journey program. This will help the FCJ team improve any shortcomings based on the following aspects:
+### General Assessment of the FCJ Program
 
-### Overall Evaluation
-
-**1. Working Environment**  
-The working environment is very friendly and open. FCJ members are always willing to help whenever I encounter difficulties, even outside working hours. The workspace is tidy and comfortable, helping me focus better. However, I think it would be nice to have more social gatherings or team bonding activities to strengthen relationships.
-
-**2. Support from Mentor / Team Admin**  
-The mentor provides very detailed guidance, explains clearly when I don’t understand, and always encourages me to ask questions. The admin team supports administrative tasks, provides necessary documents, and creates favorable conditions for me to work effectively. I especially appreciate that the mentor allows me to try and solve problems myself instead of just giving the answer.
-
-**3. Relevance of Work to Academic Major**  
-The tasks I was assigned align well with the knowledge I learned at university, while also introducing me to new areas I had never encountered before. This allowed me to both strengthen my foundational knowledge and gain practical skills.
-
-**4. Learning & Skill Development Opportunities**  
-During the internship, I learned many new skills such as using project management tools, teamwork skills, and professional communication in a corporate environment. The mentor also shared valuable real-world experiences that helped me better plan my career path.
-
-**5. Company Culture & Team Spirit**  
-The company culture is very positive: everyone respects each other, works seriously but still keeps things enjoyable. When there are urgent projects, everyone works together and supports one another regardless of their position. This made me feel like a real part of the team, even as an intern.
-
-**6. Internship Policies / Benefits**  
-The company provides an internship allowance and offers flexible working hours when needed. In addition, having the opportunity to join internal training sessions is a big plus.
+| Category                                          | Assessment & Suggestions for Improvement                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| :------------------------------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **1. Work Environment**                           | The work environment is **friendly and open**, creating excellent conditions for learning. The workspace is comfortable, which helps increase focus. **Suggestion:** To enhance cohesion, I suggest organizing informal **"Tech Talks" or "Coding Challenges"** sessions interspersed with Team Building activities, which would help interns understand each other better, both professionally and personally.                                                                                    |
+| **2. Mentor / Team Admin Support**                | The support provided was excellent. The Mentor not only explained knowledge in detail but also **encouraged "trial and error"** (allowing me to "fail fast"). This was highly valuable. The Team Admin efficiently handled procedures and documentation. **Suggestion:** Consider providing a more **detailed checklist of expected technical risks** (e.g., common ECR/ECS errors) early on, or **increase short 1-on-1 sessions** during the crucial final phase to ensure no issues are missed. |
+| **3. Alignment with Major**                       | The tasks assigned were highly relevant, especially in the areas of **Cloud Architecture and DevOps**. The program helped me transform theoretical knowledge of VPC and RDS from textbooks into practical experience on AWS. This is a significant strength of the program.                                                                                                                                                                                                                        |
+| **4. Learning & Skill Development Opportunities** | Excellent. I learned how to work with project management tools and basic CI/CD pipelines. The most crucial skill gained was the **ability to self-research** and find official AWS documentation. The professional work environment helped me shape a clearer Career Path.                                                                                                                                                                                                                         |
+| **5. Culture & Team Spirit**                      | The culture of **respect, positivity, and seriousness** was a great motivator. Everyone was willing to support colleagues during urgent tasks. I genuinely felt like a member of the team, not just an intern.                                                                                                                                                                                                                                                                                     |
+| **6. Intern Policy / Benefits**                   | Support related to stipend, flexible time when needed, and the opportunity to attend internal training sessions were major plusses.                                                                                                                                                                                                                                                                                                                                                                |
 
 ---
 
 ### Additional Questions
-- What did you find **most satisfying** during your internship?  
-- What do you think the company **should improve** for future interns?  
-- If recommending to a friend, would you **suggest they intern here**? Why or why not?  
+
+- **What were you most satisfied with during the internship?**
+
+  > What I was most satisfied with was the opportunity to **access and personally deploy a complete Cloud architecture** (end-to-end) from A-Z. This allowed me to gain practical AWS experience much faster than I could have through theory alone.
+
+- **What do you think the company needs to improve for future interns?**
+
+  > The company should **emphasize the importance of work discipline and time management** even more starting from the first few weeks. Although reminded, my failure to complete the final Deployment due to a technical error near the deadline taught me a huge lesson about **avoiding procrastination** and the need to **allocate sufficient buffer time** for system testing. This could be addressed with regular progress check-ins (e.g., twice a week) even when things seem stable.
+
+- **If recommending to friends, would you advise them to intern here? Why?**
+  > **Absolutely.** I would strongly recommend friends interested in Cloud/DevOps to join because this is a rare environment that allows them to:
+  >
+  > 1. Gain hands-on experience with **Production-grade Cloud architecture**.
+  > 2. Receive guidance from **skillful, dedicated Mentors** who encourage self-learning.
 
 ---
 
-### Suggestions & Expectations
-- Do you have any suggestions to improve the internship experience?  
-- Would you like to continue this program in the future?  
-- Any other comments (free sharing):
+### Suggestions & Future Intent
 
+- **Do you have any suggestions to improve the internship experience?**
 
+  - Add **formal Technical Review sessions** (e.g., every two weeks) where interns present the architecture they have built, helping them train in professional **Communication and Technical Presentation** skills.
+  - Add a dedicated session on **"Debugging and Root Cause Analysis (RCA)"** in a Cloud environment, as this is a key skill for deployment execution.
+
+- **Would you like to continue this program in the future?**
+
+  > Yes, I am very eager to continue this program **until the end of the season, not just the internship period**, or have the opportunity to become a permanent employee, to continue contributing and learning more about advanced Cloud services.
+
+- **Other Feedback (feel free to share):**
+  > I would like to express my sincere thanks to the Mentor and the FCJ Team. Despite some setbacks (like the final Deployment error), those very failures provided me with invaluable practical lessons on discipline and preparation that no classroom could teach.

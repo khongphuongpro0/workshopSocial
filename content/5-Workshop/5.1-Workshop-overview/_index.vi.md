@@ -1,21 +1,37 @@
 ﻿---
-title : "Giới thiệu"
-date: "2024-01-15" 
-weight : 1
-chapter : false
-pre : " <b> 5.1. </b> "
+title: "Tổng quan Workshop"
+date: 2025-12-10T11:00:00+07:00
+weight: 1
+chapter: true
+pre: "<b>5.1.</b> "
 ---
 
-#### Giới thiệu về VPC Endpoint
+# 🚀 Tổng quan về Workshop: Triển khai Ứng dụng Web trên AWS
 
-+ Điểm cuối VPC (endpoint) là thiết bị ảo. Chúng là các thành phần VPC có thể mở rộng theo chiều ngang, dự phòng và có tính sẵn sàng cao. Chúng cho phép giao tiếp giữa tài nguyên điện toán của bạn và dịch vụ AWS mà không gây ra rủi ro về tính sẵn sàng.
-+ Tài nguyên điện toán đang chạy trong VPC có thể truy cập Amazon S3 bằng cách sử dụng điểm cuối Gateway. Interface Endpoint  PrivateLink có thể được sử dụng bởi tài nguyên chạy trong VPC hoặc tại TTDL.
+Workshop này được thiết kế để hướng dẫn bạn từng bước xây dựng và triển khai một ứng dụng web hoàn chỉnh (bao gồm Frontend và Backend) lên nền tảng **Amazon Web Services (AWS)**, sử dụng các dịch vụ Cloud hiện đại và kiến trúc tối ưu.
 
-#### Tổng quan về workshop
-Trong workshop này, bạn sẽ sử dụng hai VPC.
-+ **"VPC Cloud"** dành cho các tài nguyên cloud như Gateway endpoint và EC2 instance để kiểm tra.
-+ **"VPC On-Prem"** mô phỏng môi trường truyền thống như nhà máy hoặc trung tâm dữ liệu của công ty. Một EC2 Instance chạy phần mềm StrongSwan VPN đã được triển khai trong "VPC On-prem" và được cấu hình tự động để thiết lập đường hầm VPN Site-to-Site với AWS Transit Gateway. VPN này mô phỏng kết nối từ một vị trí tại TTDL (on-prem) với AWS cloud. Để giảm thiểu chi phí, chỉ một phiên bản VPN được cung cấp để hỗ trợ workshop này. Khi lập kế hoạch kết nối VPN cho production workloads của bạn, AWS khuyên bạn nên sử dụng nhiều thiết bị VPN để có tính sẵn sàng cao.
+## 1.1. Mục tiêu Workshop
 
-![overview](/images/5-Workshop/5.1-Workshop-overview/diagram1.png)
+Sau khi hoàn thành Workshop, bạn sẽ nắm vững các kỹ năng sau:
 
+- **Thiết lập Mạng:** Tạo và cấu hình **VPC (Virtual Private Cloud)**, Subnet (Public/Private), Internet Gateway, và NAT Gateway để đảm bảo môi trường mạng bảo mật và sẵn sàng cao.
+- **Lưu trữ Dữ liệu:** Khởi tạo và quản lý **Amazon RDS (Relational Database Service)** cho Database Backend.
+- **Lưu trữ Tĩnh:** Sử dụng **Amazon S3** để lưu trữ nội dung tĩnh (Frontend) và các tệp upload của người dùng.
+- **Phân phối Nội dung và Tên miền:** Cấu hình **Amazon CloudFront (CDN)** để tăng tốc độ và bảo mật, kết hợp với **Amazon Route 53** để quản lý tên miền và **ACM (AWS Certificate Manager)** cho chứng chỉ SSL.
+- **Container hóa và Triển khai:** Đóng gói ứng dụng Backend bằng **Docker**, đẩy image lên **ECR (Elastic Container Registry)**.
+- **Load Balancing và Bảo mật:** Thiết lập **Application Load Balancer (ALB)** và cấu hình **Security Group** chi tiết để kiểm soát lưu lượng truy cập.
+- **Triển khai Serverless/Container:** Triển khai ứng dụng Backend lên **Amazon ECS (Elastic Container Service)** sử dụng **Fargate** để vận hành linh hoạt và hiệu quả.
 
+---
+
+## 1.2. Kiến trúc Ứng dụng
+
+Ứng dụng mẫu sẽ được triển khai theo **kiến trúc ba tầng (Three-Tier Architecture)**, đảm bảo tính sẵn sàng cao, khả năng mở rộng và bảo mật:
+
+- **Tầng Web (Frontend):** Ứng dụng ReactJS được lưu trữ trên **Amazon S3** và phân phối qua **CloudFront** (sử dụng tên miền riêng thông qua Route 53 và HTTPS).
+- **Tầng Ứng dụng (Backend):** Ứng dụng Backend được đóng gói bằng **Docker**, lưu trữ trên **ECR**, và chạy trên **ECS Fargate**, được truy cập thông qua **ALB** trong các Private Subnet.
+- **Tầng Dữ liệu:** Database **MySQL** được quản lý bởi **Amazon RDS**, nằm hoàn toàn trong Private Subnet và chỉ giao tiếp với Backend.
+
+Bạn đã sẵn sàng để bắt đầu hành trình triển khai của mình chưa?
+
+---

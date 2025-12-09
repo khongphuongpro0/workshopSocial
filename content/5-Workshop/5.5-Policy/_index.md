@@ -1,101 +1,78 @@
 ﻿---
-title : "VPC Endpoint Policies"
-date: "2024-01-15"
-weight : 5
-chapter : false
-pre : " <b> 5.5. </b> "
+title: "Set up Subnet Group and RDS Database"
+date: 2025-12-09T10:35:00+07:00
+weight: 4
+chapter: false
+pre: "<b>5.5.</b> "
 ---
 
-When you create an interface or gateway endpoint, you can attach an endpoint policy to it that controls access to the service to which you are connecting. A VPC endpoint policy is an IAM resource policy that you attach to an endpoint. If you do not attach a policy when you create an endpoint, AWS attaches a default policy for you that allows full access to the service through the endpoint.
+In this step, we will create a **DB Subnet Group** (mandatory for RDS) and then initialize **Amazon RDS (Relational Database Service)** for the backend database.
 
-You can create a policy that restricts access to specific S3 buckets only. This is useful if you only want certain S3 Buckets to be accessible through the endpoint.
+## 5.1. Create DB Subnet Group
 
-In this section you will create a VPC endpoint policy that restricts access to the S3 bucket specified in the VPC endpoint policy.
+1.  In the **RDS** service, go to the **Subnet Groups** tab, and click **Create DB Subnet Group**.
 
-![endpoint diagram](/images/5-Workshop/5.5-Policy/s3-bucket-policy.png)
+![We select the subnet group tab in the rds service, set a name, select the vpc we just created](./images/SubnetGroup_1.png)
 
-#### Connect to an EC2 instance and verify connectivity to S3
+2.  Set a name (e.g., `social-media-db-subnet-group`), and select the created VPC.
+3.  Select the 2 corresponding AZs and the 2 **Private Subnets** created for RDS (`Private-RDS-A` and `Private-RDS-B`).
 
-1. Start a new AWS Session Manager session on the instance named Test-Gateway-Endpoint. From the session, verify that you can list the contents of the bucket you created in Part 1: Access S3 from VPC:
+![Next, select 2 corresponding azs and 2 private subnets in 2 different azs](./images/SubnetGroup_2.png)
 
-```
-aws s3 ls s3://\<your-bucket-name\>
-```
-![test](/images/5-Workshop/5.5-Policy/test1.png)
+4.  Subnet Group creation is successful.
 
-The bucket contents include the two 1 GB files uploaded in earlier.
+![Subnet Group creation is successful](./images/SubnetGroup_3.png)
 
-2. Create a new S3 bucket; follow the naming pattern you used in Part 1, but add a '-2' to the name. Leave other fields as default and click create
+## 5.2. Create RDS Database (MySQL)
 
-![create bucket](/images/5-Workshop/5.5-Policy/create-bucket.png)
+1.  Go to the **RDS** service and click **Create database**.
 
-Successfully create bucket
+![Go to RDS service and click create database](./images/RDS_1.png)
 
-![Success](/images/5-Workshop/5.5-Policy/create-bucket-success.png)
+2.  Select the **MySQL** Engine.
 
-3. Navigate to: Services > VPC > Endpoints, then select the Gateway VPC endpoint you created earlier. Click the Policy tab. Click Edit policy.
+![Here we use mysql so we will choose mysql](./images/RDS_2.png)
 
-![policy](/images/5-Workshop/5.5-Policy/policy1.png)
+3.  Choose the version and select the **Free tier** **Template** to save costs.
 
-The default policy allows access to all S3 Buckets through the VPC endpoint.
+![Next we choose the version and template, since my account is still eligible for free tier, I will choose free tier to save costs](./images/RDS_3.png)
 
-4. In Edit Policy console, copy & Paste the following policy, then replace yourbucketname-2 with your 2nd bucket name. This policy will allow access through the VPC endpoint to your new bucket, but not any other bucket in Amazon S3. Click Save to apply the policy.
+4.  Set the Database name, the account name (**Master username**), and the password (**Master password**).
 
-```
-{
-  "Id": "Policy1631305502445",
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "Stmt1631305501021",
-      "Action": "s3:*",
-      "Effect": "Allow",
-      "Resource": [
-      				"arn:aws:s3:::yourbucketname-2",
-       				"arn:aws:s3:::yourbucketname-2/*"
-       ],
-      "Principal": "*"
-    }
-  ]
-}
-```
+![We set the database name, account name, and password](./images/RDS_4.png)
 
-![custom policy](/images/5-Workshop/5.5-Policy/policy2.png)
+5.  Select the **DB instance class** as **t4g.micro** (Free tier).
 
-Successfully customize policy
+![Here because it's free tier, we will choose t4g.micro](./images/RDS_5.png)
 
-![success](/static/images/5-Workshop/5.5-Policy/success.png)
+6.  Select **Storage** as **gp3**.
 
-5. From your session on the Test-Gateway-Endpoint instance, test access to the S3 bucket you created in Part 1: Access S3 from VPC
-```
-aws s3 ls s3://<yourbucketname>
-```
+![Select Storage as gp3](./images/RDS_6.png)
 
-This command will return an error because access to this bucket is not permitted by your new VPC endpoint policy:
+7.  Select the VPC and the **Subnet Group** created above.
 
-![error](/static/images/5-Workshop/5.5-Policy/error.png)
+![Select vpc and subnet group created above](./images/RDS_7.png)
 
-6. Return to your home directory on your EC2 instance ` cd~ `
+8.  In the **Public access** section, select **No** (since this is a Private Subnet).
 
-+ Create a file ```fallocate -l 1G test-bucket2.xyz ```
-+ Copy file to 2nd bucket ```aws s3 cp test-bucket2.xyz s3://<your-2nd-bucket-name>```
+![in the public access section we choose no](./images/RDS_8.png)
 
-![success](/static/images/5-Workshop/5.5-Policy/test2.png)
+9.  Then click **Create database**. Creation is successful.
 
-This operation succeeds because it is permitted by the VPC endpoint policy.
+### 5.2.1. Temporarily Modify Public Access and Migration
 
-![success](/static/images/5-Workshop/5.5-Policy/test2-success.png)
+1.  To perform the initial database **migration**, we need to temporarily change **Public access** to **Yes** (DMS can be used for larger databases).
 
-+ Then we test access to the first bucket by copy the file to 1st bucket `aws s3 cp test-bucket2.xyz s3://<your-1st-bucket-name>`
+![We need to adjust public access to be able to migrate the database (DMS can be used for large databases)](./images/RDS_9.png)
 
-![fail](/static/images/5-Workshop/5.5-Policy/test2-fail.png)
+2.  Modification is successful.
 
-This command will return an error because access to this bucket is not permitted by your new VPC endpoint policy.
+![Modification is successful](./images/RDS_10.png)
 
-#### Part 3 Summary:
+3.  Perform Database Migration/Import: You can use MySQL Workbench or the Command Line.
 
-In this section, you created a VPC endpoint policy for Amazon S3, and used the AWS CLI to test the policy. AWS CLI actions targeted to your original S3 bucket failed because you applied a policy that only allowed access to the second bucket you created. AWS CLI actions targeted for your second bucket succeeded because the policy allowed them. These policies can be useful in situations where you need to control access to resources through VPC endpoints.
+![Here I use the command line](./images/RDS_11.png)
 
+4.  Verify by connecting MySQL Workbench to RDS. The database contains data.
 
-
-
+![Verify by connecting mysql workbench to rds](./images/RDS_12.png)
