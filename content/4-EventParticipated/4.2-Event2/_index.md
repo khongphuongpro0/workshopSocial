@@ -1,124 +1,73 @@
 ﻿---
-title: "Event 2"
-date: "2024-01-15"
-weight: 1
+title: "Event 2: AWS Perimeter Protection Workshop"
+date: "2025-11-19"
+weight: 2
 chapter: false
 pre: " <b> 4.2. </b> "
 ---
 
-# Workshop Report "GenAI-powered App-DB Modernization workshop"
+# Workshop Report "Secure Your Applications: AWS Perimeter Protection Workshop"
+
+### Event Information
+
+- **Event Name:** Secure Your Applications: AWS Perimeter Protection Workshop | Ho Chi Minh City
+- **Date & Time:** 09:00 - 17:00 on November 19, 2025
+- **Location:** 26th Floor (Room 26.100), Bitexco Financial Tower, No. 02 Hai Trieu Street, Ben Nghe Ward, District 1, Ho Chi Minh City, Vietnam
+- **Role:** Participant
+- **Level:** Hands-on workshop (Level 200, 300)
 
 ### Event Objectives
 
-- Share best practices in modern application design
-- Introduce DDD methodology and event-driven architecture
-- Guide the selection of appropriate compute services
-- Introduce AI tools supporting the development lifecycle
+- Provide practical skills to protect web applications from escalating threats (such as DDoS, application-layer attacks).
+- Equip participants with proven AWS security frameworks to build a strong **Perimeter Protection** architecture.
 
-### Speakers List
+### Featured Speakers
 
-- **Jignesh Shah** - Director, Open Source Databases
-- **Erica Liu** - Sr. GTM Specialist, AppMod
-- **Fabrianne Effendi** - Assc. Specialist SA, Serverless Amazon Web Services
+- **Nguyễn Gia Hưng** - Head of Solutions Architect - Vietnam & Cambodia
+- **Julian Ju** - Senior Edge Services Specialist Solutions Architect
+- **Kevin Lim** - Senior Edge Services Specialist GTM
 
-### Key Content Highlights
+### Key Content
 
-#### Addressing the Negative Impacts of Legacy Application Architecture
+#### 1. From Edge to Origin: CloudFront as Your Foundation
 
-- Slow product release time → Revenue loss/missed opportunities
-- Inefficient operation → Lost productivity, increased costs
-- Non-compliance with security regulations → Security breach, damaged reputation
+- **CDN Architecture:** Learn how to design and optimize global content distribution with **Amazon CloudFront**.
+- **Core Capabilities:** The key capabilities of the CDN, from edge locations to security controls, building a solid foundation for serving content at scale.
 
-#### Transitioning to a New Application Architecture - Microservice Architecture
+#### 2. Attack Surface Defense: WAF & Application Protection
 
-Transitioning to a modular system – where each function is an **independent service** communicating via **events** with 3 core pillars:
+- **WAF Security:** Protect web applications from threats by using **AWS WAF** to block malicious traffic.
+- **OWASP Top 10 Mitigation:** Learn how to mitigate common vulnerabilities, including defending against bot attacks.
 
-- **Queue Management**: Handling asynchronous tasks
-- **Caching Strategy:** Optimizing performance
-- **Message Handling:** Flexible communication between services
+#### 3. Hands-on Workshop
 
-#### Domain-Driven Design (DDD)
+- **Optimize Internet Web Application:** Practical exercise in optimizing web applications through AWS Edge services.
+- **Secure Internet Web Application:** Practical security setup exercise, discussing real-world implementation scenarios.
+- **Quiz Activity:** A Q&A game at the end of the Workshop to reinforce knowledge and offer a chance to receive gifts from AWS.
 
-- **4-step method**: Identify domain events → arrange timeline → identify actors → define bounded contexts
-- **Bookstore case study**: Illustrating practical application of DDD
-- **Context mapping**: 7 patterns for integrating bounded contexts
+### Key Takeaways
 
-#### Event-Driven Architecture
+#### Security Techniques
 
-- **3 integration patterns**: Publish/Subscribe, Point-to-point, Streaming
-- **Benefits**: Loose coupling, scalability, resilience
-- **Sync vs Async comparison**: Understanding the trade-offs
+- **Perimeter Security:** Clearly understand the role of Edge services (CloudFront, WAF) in protecting the application at the outermost layer.
+- **Optimization and Defense:** Learn how to use CloudFront not only for speed improvement but also as a first layer of security (defense in depth).
+- **AWS WAF Configuration:** Grasp how to write rules to block common types of attacks such as SQL Injection, Cross-Site Scripting (XSS).
 
-#### Compute Evolution
+#### Architectural Mindset
 
-- **Shared Responsibility Model**: From EC2 → ECS → Fargate → Lambda
-- **Serverless benefits**: No server management, auto-scaling, pay-for-value
-- **Functions vs Containers**: Criteria for appropriate selection
-
-#### Amazon Q Developer
-
-- **SDLC automation**: From planning to maintenance
-- **Code transformation**: Java upgrade, .NET modernization
-- **AWS Transform agents**: VMware, Mainframe, .NET migration
-
-### Key Learnings
-
-#### Design Mindset
-
-- **Business-first approach**: Always start with the business domain, not technology
-- **Ubiquitous language**: Importance of common vocabulary between business and tech teams
-- **Bounded contexts**: How to identify and manage complexity in large systems
-
-#### Technical Architecture
-
-- **Event storming technique**: Practical method for modeling business processes
-- Using **Event-driven communication** instead of synchronous calls
-- **Integration patterns**: Understanding when to use sync, async, pub/sub, streaming
-- **Compute spectrum**: Criteria for choosing from VM → containers → serverless
-
-#### Modernization Strategy
-
-- **Phased approach**: No rushing, a clear roadmap is necessary
-- **7Rs framework**: Various paths depending on the characteristics of each application
-- **ROI measurement**: Cost reduction + business agility
+- **Secure Architecture:** Apply a secure Cloud architecture design mindset, ensuring resilience against attacks.
+- **Real-world Experience:** Discussions with experts helped gain deeper insight into deployment scenarios and practical security challenges.
 
 ### Application to Work
 
-- **Applying DDD** to the current project: Event storming sessions with the business team
-- **Refactor microservices**: Using bounded contexts to identify service boundaries
-- **Implement event-driven patterns**: Replacing some synchronous calls with async messaging
-- **Serverless adoption**: Piloting AWS Lambda for suitable use cases
-- **Try Amazon Q Developer**: Integrate into the development workflow to boost productivity
+- **Current Project Security:** Immediately apply WAF knowledge to configure protection for the Load Balancer (ALB) in the Social Media project.
+- **Frontend Optimization:** Utilize CloudFront as a mandatory part of the Frontend architecture to increase access speed and ensure HTTPS.
+- **Detailed Security Group Configuration:** Configure the Security Groups of resources (ALB, ECS, RDS) according to the "Least Privilege" principle to prevent unwanted access.
 
 ### Event Experience
 
-Participating in the **"GenAI-powered App-DB Modernization"** workshop was a highly valuable experience, giving me a comprehensive view of how to modernize applications and databases using modern methods and tools. Some notable experiences:
+- **Practical Workshop:** The Hands-on Lab sessions provided deeper practical experience compared to theory, boosting my confidence in deploying complex security services.
+- **In-depth Discussion:** Opportunity to discuss security issues with speakers who have 15-25 years of experience in IT and Security.
+- **Quiz Reward:** Participating in the trivia game helped reinforce knowledge in a fun way, along with receiving souvenir gifts from AWS.
 
-#### Learning from Highly Qualified Speakers
-
-- Speakers from AWS and major technology organizations shared **best practices** in modern application design.
-- Through practical case studies, I gained a clearer understanding of how to apply **Domain-Driven Design (DDD)** and **Event-Driven Architecture** to large projects.
-
-#### Practical Technical Experience
-
-- Participating in **event storming** sessions helped me visualize how to **model business processes** into domain events.
-- Learned how to **decompose microservices** and define **bounded contexts** to manage system complexity.
-- Understood the trade-offs between **synchronous and asynchronous communication** as well as integration patterns like **pub/sub, point-to-point, streaming**.
-
-#### Applying Modern Tools
-
-- Directly learned about **Amazon Q Developer**, an AI tool supporting the SDLC from planning to maintenance.
-- Learned how to **automate code transformation** and pilot serverless with **AWS Lambda**, thereby enhancing development productivity.
-
-#### Connection and Exchange
-
-- The workshop provided opportunities for direct exchange with experts, colleagues, and the business team, helping to **elevate the ubiquitous language** between business and tech.
-- Through practical examples, I realized the importance of the **business-first approach**, always starting with business needs rather than solely focusing on technology.
-
-#### Lessons Learned
-
-- Applying DDD and event-driven patterns helps reduce **coupling**, and increase **scalability** and **resilience** for the system.
-- The modernization strategy requires a **phased approach** and **ROI measurement**; one should not rush to convert the entire system.
-- AI tools like Amazon Q Developer can **boost productivity** when integrated into the existing development workflow.
-
-> Overall, the event not only provided technical knowledge but also helped me change my mindset regarding application design, system modernization, and effective collaboration between teams.
+> This Workshop is a valuable resource for building a Cloud architecture that not only performs well but is also **resilient** against modern network threats.

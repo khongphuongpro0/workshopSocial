@@ -1,73 +1,60 @@
 ﻿---
-title: "Event 2: AWS Perimeter Protection Workshop"
-date: "2025-11-19"
-weight: 2
+title: "Events Participated"
+date: "2024-01-15"
+weight: 4
 chapter: false
-pre: " <b> 4.2. </b> "
+pre: " <b> 4. </b> "
 ---
 
-# Workshop Report "Secure Your Applications: AWS Perimeter Protection Workshop"
+During my internship, I participated in **2 important events**. Each event was a memorable experience, providing new, interesting, and valuable knowledge, along with great moments and gifts. Participating in these workshops/events helped me stay updated on the latest technology trends and apply them directly to my internship project.
 
-### Event Information
+---
 
-- **Event Name:** Secure Your Applications: AWS Perimeter Protection Workshop | Ho Chi Minh City
-- **Date & Time:** 09:00 - 17:00 on November 19, 2025
-- **Location:** 26th Floor (Room 26.100), Bitexco Financial Tower, No. 02 Hai Trieu Street, Ben Nghe Ward, District 1, Ho Chi Minh City, Vietnam
-- **Role:** Participant
-- **Level:** Hands-on workshop (Level 200, 300)
+### 🚀 Event 1: OJT Kick-off Ceremony
 
-### Event Objectives
+&emsp;**Event Name:** RECAP | KICK-OFF AWS FIRST CLOUD JOURNEY WORKFORCE – OJT FALL 2025
 
-- Provide practical skills to protect web applications from escalating threats (such as DDoS, application-layer attacks).
-- Equip participants with proven AWS security frameworks to build a strong **Perimeter Protection** architecture.
+&emsp;**Date:** September 6, 2025
 
-### Featured Speakers
+&emsp;**Location:** Bitexco Financial Tower, No. 02 Hai Trieu Street, Ben Nghe Ward, District 1, Ho Chi Minh City.
 
-- **Nguyễn Gia Hưng** - Head of Solutions Architect - Vietnam & Cambodia
-- **Julian Ju** - Senior Edge Services Specialist Solutions Architect
-- **Kevin Lim** - Senior Edge Services Specialist GTM
+&emsp;**Role in Event:** Participant
 
-### Key Content
+&emsp;**Brief Description:**
 
-#### 1. From Edge to Origin: CloudFront as Your Foundation
+The event officially marked the beginning of the **AWS First Cloud Journey Workforce – OJT FALL 2025** program, an intensive training journey in Cloud Computing. The main content included:
 
-- **CDN Architecture:** Learn how to design and optimize global content distribution with **Amazon CloudFront**.
-- **Core Capabilities:** The key capabilities of the CDN, from edge locations to security controls, building a solid foundation for serving content at scale.
+- **Keynote & Industry Sharing:** AWS Vietnam specialists shared directions on Cloud, AI, and DevOps trends.
+- **Alumni & Career Sharing:** Interaction with successful alumni, who are currently Cloud Engineers and GenAI Engineers.
+- **Networking & Q&A:** Opportunity to connect with experts and the tech community.
 
-#### 2. Attack Surface Defense: WAF & Application Protection
+&emsp;**Value Gained:**
 
-- **WAF Security:** Protect web applications from threats by using **AWS WAF** to block malicious traffic.
-- **OWASP Top 10 Mitigation:** Learn how to mitigate common vulnerabilities, including defending against bot attacks.
+- **Clarity of Vision:** Gained a clear understanding of the program's objectives and the future trajectory of Cloud and AI/ML careers.
+- **Networking:** Established initial connections with peers and industry experts.
 
-#### 3. Hands-on Workshop
+---
 
-- **Optimize Internet Web Application:** Practical exercise in optimizing web applications through AWS Edge services.
-- **Secure Internet Web Application:** Practical security setup exercise, discussing real-world implementation scenarios.
-- **Quiz Activity:** A Q&A game at the end of the Workshop to reinforce knowledge and offer a chance to receive gifts from AWS.
+### 🛡️ Event 2: Application Protection Workshop on AWS
 
-### Key Takeaways
+&emsp;**Event Name:** Secure Your Applications: AWS Perimeter Protection Workshop | Ho Chi Minh City
 
-#### Security Techniques
+&emsp;**Time:** 09:00 - 17:00 on November 19, 2025
 
-- **Perimeter Security:** Clearly understand the role of Edge services (CloudFront, WAF) in protecting the application at the outermost layer.
-- **Optimization and Defense:** Learn how to use CloudFront not only for speed improvement but also as a first layer of security (defense in depth).
-- **AWS WAF Configuration:** Grasp how to write rules to block common types of attacks such as SQL Injection, Cross-Site Scripting (XSS).
+&emsp;**Location:** 26th Floor (Room 26.100), Bitexco Financial Tower, No. 02 Hai Trieu Street, Ben Nghe Ward, District 1, Ho Chi Minh City.
 
-#### Architectural Mindset
+&emsp;**Role in Event:** Participant
 
-- **Secure Architecture:** Apply a secure Cloud architecture design mindset, ensuring resilience against attacks.
-- **Real-world Experience:** Discussions with experts helped gain deeper insight into deployment scenarios and practical security challenges.
+&emsp;**Brief Description:**
 
-### Application to Work
+An in-depth, hands-on workshop focused on solutions for protecting web applications from threats like DDoS and Application Layer Attacks using AWS edge security services. Key activities included:
 
-- **Current Project Security:** Immediately apply WAF knowledge to configure protection for the Load Balancer (ALB) in the Social Media project.
-- **Frontend Optimization:** Utilize CloudFront as a mandatory part of the Frontend architecture to increase access speed and ensure HTTPS.
-- **Detailed Security Group Configuration:** Configure the Security Groups of resources (ALB, ECS, RDS) according to the "Least Privilege" principle to prevent unwanted access.
+- **Architecture & Optimization:** Learning about **Amazon CloudFront** as a content delivery platform and its security controls.
+- **Defense & WAF:** Protecting applications using **AWS WAF** to mitigate **OWASP Top 10** vulnerabilities.
+- **Hands-on Labs:** Practical exercises on optimizing and securing internet-facing web applications, guided by AWS Solution Architects. A **Quiz** activity was held at the end for prizes.
 
-### Event Experience
+&emsp;**Value Gained:**
 
-- **Practical Workshop:** The Hands-on Lab sessions provided deeper practical experience compared to theory, boosting my confidence in deploying complex security services.
-- **In-depth Discussion:** Opportunity to discuss security issues with speakers who have 15-25 years of experience in IT and Security.
-- **Quiz Reward:** Participating in the trivia game helped reinforce knowledge in a fun way, along with receiving souvenir gifts from AWS.
-
-> This Workshop is a valuable resource for building a Cloud architecture that not only performs well but is also **resilient** against modern network threats.
+- **Security Skills:** Acquired practical skills in configuring **AWS WAF** and **CloudFront** to implement perimeter defense.
+- **Direct Application:** The knowledge is directly applicable to securing the Social Media project, enhancing my understanding of robust Cloud security architecture (a crucial skill for Cloud/DevOps).
+- **Technical Networking:** Collaborated with other participants during the hands-on lab sessions.
